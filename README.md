@@ -1,24 +1,24 @@
 # victorfateh-app
 
-## Project setup
+## What is this
+
+An overkill full stack app for my portfolio website. I use this project as an excuse to practice new skills.
+
+## Project Structure
+
 ```
-npm install
+.
+├── frontend                # FE app
+│   └── web                 # Vue w/ Vuetify
+|
+├── backend                 # BE app
+│   ├── src                 # Serverless Node/AWS backend
+│   └── serverless.yml      # SLS deploy config
+└──
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Future plans
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## License
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

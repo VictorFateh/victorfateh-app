@@ -1,0 +1,21 @@
+{
+  "name": "victorfateh-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Serverless backend powering victorfateh.com",
+  "author": "Victor Fateh",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.709.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "serverless-bundle": "^1.9.0",
+    "serverless-pseudo-parameters": "^2.5.0",
+    "webpack": "^4.43.0"
+  }
+}

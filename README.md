@@ -6,14 +6,10 @@ An overkill full stack app for my portfolio website. I use this project as an ex
 
 ## Project Structure
 
-```
+```txt
 .
-├── frontend                # FE app
-│   └── web                 # Vue w/ Vuetify
-|
-├── backend                 # BE app
-│   ├── src                 # Serverless Node/AWS backend
-│   └── serverless.yml      # SLS deploy config
+├── frontend                # Vue3 app
+├── backend
 └──
 ```
 

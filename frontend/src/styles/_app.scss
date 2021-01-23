@@ -1,0 +1,91 @@
+html { 
+    overflow-y: auto;
+}
+
+body {
+    background-color: map-get($material-theme, "app-bar");
+    
+    .theme--light.v-application {
+        // background: linear-gradient(180deg, map-get($light-blue, "lighten-3") 0%,map-get($material-light, "app-bar") 100%);
+        background-color: #F5F5F5;
+    }
+
+    .theme--dark.v-application {
+        background-color: #0c1929;
+        // background: linear-gradient(180deg, map-get($blue-grey, "darken-2") 0%, map-get($material-dark, "app-bar") 100%);
+    }
+}
+
+.border-bottom {
+    border-bottom: 2px solid var(--v-primary-base);
+}
+
+@mixin theme-background($selector: null) {
+    &.theme--light #{$selector} {
+        background-color: map-get($material-light, "cards") !important;
+    }
+    &.theme--dark #{$selector} {
+        background-color: map-get($material-dark, "cards") !important;
+    }
+}
+
+.v-navigation-drawer {
+    width: 100vw !important;
+}
+
+.v-app-bar.v-toolbar {
+    @media #{map-get($display-breakpoints, 'sm-and-down')} {
+        .v-toolbar__title {
+            flex-grow: 1;
+        }
+    }
+
+    @media #{map-get($display-breakpoints, 'lg-and-up')} {
+        .v-toolbar__title {
+            position: absolute;
+        }
+    }
+    &.theme--dark .v-toolbar__title a {
+        color: map-get($material-dark, "text-color");
+    }
+    &.theme--light .v-toolbar__title a {
+        $light-text-color: map-get($material-light, "text-color");
+        $light-primary-text-percent: map-get(
+            $material-light,
+            "primary-text-percent"
+        );
+        color: rgba(
+            red($light-text-color),
+            green($light-text-color),
+            blue($light-text-color),
+            $light-primary-text-percent
+        );
+    }
+    .v-app-bar__nav-icon {
+        position: absolute;
+    }
+
+    .v-toolbar__title {
+        a {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            flex-direction: row;
+            text-decoration: none;
+            vertical-align: middle;
+
+            svg.logo {
+                width: 48px;
+                height: 48px;
+                border: none 0px;
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            span {
+                padding-top: 8px;
+            }
+        }
+    }
+}

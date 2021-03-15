@@ -1,20 +1,14 @@
-# victorfateh-app
+# victorfateh Frontend 
 
-## What is this
 
-An overkill full stack app for my portfolio website. I use this project as an excuse to practice new skills.
+## Usage
 
-## Project Structure
+* `npm i`
+* `npm run serve`
+* `npm run build`
 
-```txt
-.
-├── frontend                # Vue3 app
-├── backend
-└──
-```
+## Tech
 
-## Future plans
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+* Vue 2.6
+* Vuetify 2.3
+* S3

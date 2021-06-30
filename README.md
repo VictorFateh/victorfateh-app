@@ -1,14 +1,24 @@
-# victorfateh Frontend 
+# victorfateh-app
 
+## Project setup
+```
+npm install
+```
 
-## Usage
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-* `npm i`
-* `npm run serve`
-* `npm run build`
+### Compiles and minifies for production
+```
+npm run build
+```
 
-## Tech
+### Lints and fixes files
+```
+npm run lint
+```
 
-* Vue 2.6
-* Vuetify 2.3
-* S3
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

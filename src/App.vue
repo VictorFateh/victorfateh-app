@@ -3,17 +3,19 @@
     <nav-bar />
     <v-main>
       <v-container fluid>
-        <router-view />
+        <v-slide-x-transition mode="out-in">
+          <router-view />
+        </v-slide-x-transition>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { reactive, ref } from "@vue/composition-api";
+import { reactive, ref, defineComponent } from "@vue/composition-api";
 
-export default {
-  components: { NavBar: () => import("./components/core/NavBar.vue") },
+export default defineComponent({
+  components: { NavBar: () => import("@/components/core/NavBar.vue") },
   setup(_props) {
     // UI
     const drawer = ref();
@@ -45,5 +47,5 @@ export default {
 
     };
   },
-};
+});
 </script>

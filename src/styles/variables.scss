@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@200;400;500;700&display=swap');
+
+$body-font-family: 'Karla', sans-serif;
+$heading-font-family: 'Rubik', sans-serif;
+
+.v-application {
+    font-family: $body-font-family;
+     .text-h2 { // To pin point specific classes of some components
+        font-family: $heading-font-family;
+     }
+  }
+
+
+$headings: (
+    "h1": (
+        "font-family": $heading-font-family
+    ),
+    "text-h2": (
+        "font-family": $heading-font-family
+    ),
+    "h3": (
+        "font-family": $heading-font-family
+    ),
+    "h4": (
+        "font-family": $heading-font-family
+    ),
+    "h5": (
+        "font-family": $heading-font-family
+    ),
+    "h6": (
+        "font-family": $heading-font-family
+    ),
+    "subtitle-1": (
+        "font-family": $body-font-family
+    ),
+    "subtitle-2": (
+        "font-family": $body-font-family
+    ),
+    "body-1": (
+        "font-family": $body-font-family
+    ),
+    "body-2": (
+        "font-family": $body-font-family
+    ),
+    "caption": (
+        "font-family": $body-font-family
+    ),
+    "overline": (
+        "font-family": $body-font-family
+    )
+);
+
+

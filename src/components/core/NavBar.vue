@@ -1,16 +1,35 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" app floating class="hidden-md-and-up">
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      floating
+      right
+      class="hidden-md-and-up"
+    >
       <v-list class="text-center">
-        <v-list-item link @click="drawer = false">
+        <v-list-item
+          link
+          @click="drawer = false"
+        >
           <v-list-item-title>
             <v-icon>mdi-close</v-icon>
           </v-list-item-title>
         </v-list-item>
-        <v-list-item link to="/">
-          <v-list-item-title>Home</v-list-item-title>
+
+        <v-list-item to="/" exact>
+          <v-list-item-content>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
-        <v-list-item v-for="m in menu" :key="m.title" link :to="m.to" exact>
+
+        <v-list-item
+          v-for="m in menu"
+          :key="m.title"
+          link
+          :to="m.to"
+          exact
+        >
           <v-list-item-content>
             <v-list-item-title>{{ m.title }}</v-list-item-title>
           </v-list-item-content>
@@ -18,29 +37,43 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app color="white" flat>
-      <v-container class="py-0 fill-height">
-        <v-avatar class="mr-10" color="grey darken-1" size="32" />
-
+    <v-app-bar app clipped-right flat>
+      <v-container class="py-0 px-0 fill-height d-flex flex-row justify-end" style="max-width: 1200px;">
+        <router-link to="/" class="text-decoration-none text-uppercase"><span class="text-h5">Victor Fateh</span></router-link>
+        
         <v-spacer />
-
-        <v-btn v-for="link in menu" :key="link.title" text :to="link.to">
-          {{ link.title }}
-        </v-btn>
+        
+        <div v-if="$vuetify.breakpoint.mdAndUp">
+          <v-btn
+            v-for="m in menu"
+            :key="m.title"
+            :text="!m.highlight"
+            :to="m.to"
+            :ripple="false"
+            class="font-weight-bold"
+          >
+          
+            {{ m.title }}
+          </v-btn>
+        </div>
       </v-container>
-    </v-app-bar>
-  </div>
+
+      <v-app-bar-nav-icon
+        v-if="$vuetify.breakpoint.smAndDown"
+        @click.stop="drawer = !drawer"
+      />
+    </v-app-bar></div>
 </template>
 
-<script>
-import { reactive, ref } from "@vue/composition-api";
+<script lang="ts">
+import { reactive, ref, defineComponent } from "@vue/composition-api";
 
-export default {
+export default defineComponent({
   name: "Navbar",
 
   setup() {
     // UI
-    const drawer = ref();
+    const drawer = ref<boolean>(false);
 
     // Data
     const menu = reactive([
@@ -60,9 +93,5 @@ export default {
 
     return { drawer, menu };
   },
-};
+});
 </script>
-
-<style>
-
-</style>

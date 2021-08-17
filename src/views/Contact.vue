@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Experience</h1>
+    <h1>Contact</h1>
   </div>
 </template>
 
@@ -8,7 +8,8 @@
 import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
-  metaInfo: { title: "Experience" },
+  name: "contact",
+  metaInfo: { title: "Contact" },
   setup(){
   }
 });

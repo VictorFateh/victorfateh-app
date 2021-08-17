@@ -4,6 +4,10 @@
 $body-font-family: 'Karla', sans-serif;
 $heading-font-family: 'Rubik', sans-serif;
 
+$material-light: (
+  'background': #F5F5F5
+);
+
 .v-application {
     font-family: $body-font-family;
      .text-h2 { // To pin point specific classes of some components

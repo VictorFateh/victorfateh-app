@@ -1,51 +1,31 @@
 <template>
   <v-app>
-    <nav-bar />
+    <nav-bar app />
     <v-main>
-      <v-container fluid>
-        <v-slide-x-transition mode="out-in">
+      <v-container fluid style="max-width: 1200px;">
+        <v-slide-y-transition mode="out-in">
           <router-view />
-        </v-slide-x-transition>
+        </v-slide-y-transition>
       </v-container>
     </v-main>
+    <v-footer app padless color="#F5F5F5" fixed>
+      <v-container style="max-width: 1200px;" class="py-0 my-0">
+        <v-col class="text-center body-2">
+          {{ new Date().getFullYear() }}
+        </v-col>
+      </v-container>
+    </v-footer>
   </v-app>
 </template>
 
-<script>
-import { reactive, ref, defineComponent } from "@vue/composition-api";
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
   components: { NavBar: () => import("@/components/core/NavBar.vue") },
+  metaInfo: { titleTemplate: "%s | Victor Fateh" },
   setup(_props) {
-    // UI
-    const drawer = ref();
-
-    // Data
-    const menu = reactive([
-      {
-        title: "About",
-        to: "/about",
-      },
-      {
-        title: "Experience",
-        to: "/experience",
-      },
-      {
-        title: "Contact",
-        to: "/contact",
-      },
-    ]);
-    const homeTitle = ref("Victor Fateh");
-
-    return {
-      // UI
-      drawer,
-
-      // Data
-      menu,
-      homeTitle,
-
-    };
+    return {};
   },
 });
 </script>

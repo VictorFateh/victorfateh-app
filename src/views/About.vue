@@ -7,10 +7,5 @@
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api"; 
 
-export default defineComponent({
-  metaInfo: { title: "About" },
-  setup(){
-
-  }
-});
+export default defineComponent({ metaInfo: { title: "About" }, });
 </script>

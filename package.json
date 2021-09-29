@@ -10,9 +10,12 @@
   "dependencies": {
     "@vue/composition-api": "^1.0.0-rc.12",
     "core-js": "^3.6.5",
+    "epic-spinners": "^1.1.0",
     "vue": "^2.6.11",
+    "vue-cookies": "^1.7.4",
     "vue-meta": "^2.4.0",
     "vue-router": "^3.2.0",
+    "vue-typer": "^1.2.0",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {

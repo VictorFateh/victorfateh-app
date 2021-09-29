@@ -9,8 +9,6 @@ import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
   name: "contact",
-  metaInfo: { title: "Contact" },
-  setup(){
-  }
+  metaInfo: { title: "Contact" }
 });
 </script>

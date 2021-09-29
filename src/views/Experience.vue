@@ -7,9 +7,5 @@
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
 
-export default defineComponent({
-  metaInfo: { title: "Experience" },
-  setup(){
-  }
-});
+export default defineComponent({ metaInfo: { title: "Experience" } });
 </script>

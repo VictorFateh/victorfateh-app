@@ -2,12 +2,15 @@ module.exports = {
   root: true,
   env: { node: true },
   extends: [
-    "plugin:vue/recommended"
+    "plugin:vue/recommended",
+    "@vue/typescript/recommended"
   ],
   parser: "vue-eslint-parser",
   parserOptions: {
-    "parser": "babel-eslint",
-    "sourceType": "module"
+    ecmaVersion: 2020,
+    sourceType: "module",
+    project: "./tsconfig.json",
+    parser: "@typescript-eslint/parser"
   },
   overrides: [
     {
@@ -61,7 +64,9 @@ module.exports = {
     "object-curly-spacing": ["error", "always"],
     "object-curly-newline": [
       "error",
-      { "multiline": true }
+      {
+        "multiline": true
+      }
     ],
     "quotes": [
       "error",
@@ -70,4 +75,4 @@ module.exports = {
     "semi": ["error", "always"],
     "no-useless-constructor": "off"
   }
-};
+}

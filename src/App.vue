@@ -2,11 +2,9 @@
   <v-app>
     <nav-bar app />
     <v-main>
-      <v-container fluid style="max-width: 1200px;">
-        <v-slide-y-transition mode="out-in">
-          <router-view />
-        </v-slide-y-transition>
-      </v-container>
+      <v-slide-y-transition mode="out-in">
+        <router-view />
+      </v-slide-y-transition>
     </v-main>
     <v-footer app padless color="#F5F5F5" fixed>
       <v-container style="max-width: 1200px;" class="py-0 my-0">
@@ -24,7 +22,7 @@ import { defineComponent } from "@vue/composition-api";
 export default defineComponent({
   components: { NavBar: () => import("@/components/core/NavBar.vue") },
   metaInfo: { titleTemplate: "%s | Victor Fateh" },
-  setup(_props) {
+  setup() {
     return {};
   },
 });

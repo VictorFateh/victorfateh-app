@@ -16,6 +16,7 @@ export default new Vuetify({
         error: colors.red.lighten1,
         warning: colors.deepOrange.lighten1,
         info: "#2196F3",
+        background: "#F5F5F5"
         // success: colors.green.lighten2,
       }
     } 

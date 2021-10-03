@@ -58,10 +58,10 @@ export default defineComponent({
         loadingMessage.value = "I'm not actually \"initializing\" anything";
         start.value = false;
         setTimeout(() => {
-          loadingMessage.value = "but I'm glad I can waste your time";
+          loadingMessage.value = "but I'm glad I can waste your time :)";
           setTimeout(() => {
             end.value = true;
-          }, 6000);
+          }, 4000);
         }, 4000);
       }, 4000);
       

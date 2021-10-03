@@ -6,13 +6,7 @@
         <router-view />
       </v-slide-y-transition>
     </v-main>
-    <v-footer app padless color="#F5F5F5" fixed>
-      <v-container style="max-width: 1200px;" class="py-0 my-0">
-        <v-col class="text-center body-2">
-          {{ new Date().getFullYear() }}
-        </v-col>
-      </v-container>
-    </v-footer>
+    <small-footer />
   </v-app>
 </template>
 
@@ -20,7 +14,10 @@
 import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
-  components: { NavBar: () => import("@/components/core/NavBar.vue") },
+  components: { 
+    NavBar: () => import("@/components/core/NavBar.vue"),
+    SmallFooter: () => import("@/components/core/Footer.vue")
+  },
   metaInfo: { titleTemplate: "%s | Victor Fateh" },
   setup() {
     return {};

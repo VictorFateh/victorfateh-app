@@ -78,16 +78,16 @@ export default defineComponent({
     // Data
     const menu = reactive([
       {
-        title: "About",
-        to: "/about",
-      },
+        title: "Fun",
+        to: "/fun",
+      }, 
       {
         title: "Experience",
         to: "/experience",
       },
       {
-        title: "Contact",
-        to: "/contact",
+        title: "Connect",
+        to: "/connect",
       },
     ]);
 

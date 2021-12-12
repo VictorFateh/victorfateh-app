@@ -1,24 +1,29 @@
-# victorfateh-app
+# Nuxt 3 Minimal Starter
 
-## Project setup
-```
-npm install
-```
+We recommend to look at the [documentation](https://v3.nuxtjs.org).
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Setup
 
-### Compiles and minifies for production
-```
-npm run build
+Make sure to install the dependencies
+
+```bash
+yarn install
 ```
 
-### Lints and fixes files
-```
-npm run lint
+## Development
+
+Start the development server on http://localhost:3000
+
+```bash
+yarn dev
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Production
+
+Build the application for production:
+
+```bash
+yarn build
+```
+
+Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).

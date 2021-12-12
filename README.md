@@ -1,29 +1,4 @@
-# Nuxt 3 Minimal Starter
+# victorfateh.com app
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e6253da7-47ca-4671-936f-455757a5cc3a/deploy-status)](https://app.netlify.com/sites/victorfateh/deploys)
 
-We recommend to look at the [documentation](https://v3.nuxtjs.org).
-
-## Setup
-
-Make sure to install the dependencies
-
-```bash
-yarn install
-```
-
-## Development
-
-Start the development server on http://localhost:3000
-
-```bash
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-yarn build
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
+An always changing website

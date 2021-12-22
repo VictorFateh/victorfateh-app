@@ -1,13 +1,17 @@
 {
   "name": "victorfateh-app",
-  "version": "1.0.0",
-  "private": true,
+  "version": "0.0.1",
+  "author": "Victor Fateh",
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "start": "node .output/server/index.mjs"
+    "build": "parcel build index.html",
+    "dev": "parcel index.html --open",
+    "start": "npm run build && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "nuxt3": "latest"
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "tailwindcss": "^2.2.19"
   }
 }

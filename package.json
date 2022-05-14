@@ -1,6 +1,6 @@
 {
   "name": "victorfateh-app",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "Victor Fateh",
   "scripts": {
     "build": "parcel build index.html",

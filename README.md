@@ -16,7 +16,7 @@ Step 2
 npm start
 ```
 
-Step 3
+Step 3 (only for experts who know what they're doing)
 
 ```shell
 rm -rf /

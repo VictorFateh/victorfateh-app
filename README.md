@@ -15,9 +15,3 @@ Step 2
 ```shell
 npm start
 ```
-
-Step 3 (only for experts who know what they're doing)
-
-```shell
-rm -rf /
-```

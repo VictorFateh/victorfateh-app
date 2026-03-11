@@ -3,48 +3,95 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Victor Fateh</title>
-  <meta name="description" content="Victor Fateh's personal website">
+  <title>Resume – Victor Fateh</title>
+  <meta name="description" content="Victor Fateh's resume">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta property="og:title" content="Victor Fateh">
+  <meta property="og:title" content="Resume – Victor Fateh">
 
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="icon" href="favicon.ico">
 
   <link rel="stylesheet" href="css/tailwind.css">
+  <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/overwrites.css">
 
-  <meta name="theme-color" content="#fafafa">
+  <meta name="theme-color" content="#0a0a14">
+  <style>
+    .resume-wrap {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-top: 141.4286%;
+      overflow: hidden;
+      border-radius: 8px;
+      will-change: transform;
+      background: #12121e;
+    }
+    .resume-wrap iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border: none;
+      padding: 0;
+      margin: 0;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .resume-wrap iframe.loaded {
+      opacity: 1;
+    }
+    .resume-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    .resume-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .resume-loader span {
+      display: block;
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(129, 140, 248, 0.2);
+      border-top-color: #818cf8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 
-<body>
-  <div class="relative overflow-hidden">
-    <div class="max-w-7xl mx-auto ">
-      <div class="overflow-hidden z-10 pb-8 sm:pb-16 md:pb-20 lg:w-full lg:pb-28 xl:pb-32 min-h-screen">
-        <main class="mt-6">
-          <div class="mt-6 sm:mt-8 sm:flex sm:justify-start mx-4">
-            <div class="mt-4 sm:mt-0 sm:ml-3">
-              <a href="/"
-                class="inline-flex justify-center rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">back</a>
-            </div>
-          </div>
-          <div class="mx-2">
-            <div
-              style="position: relative; width: 100%; height: 0; padding-top: 141.4286%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
-              <iframe loading="lazy"
-                style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
-                src="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAFpi9YX6y0&#x2F;view?embed"
-                allowfullscreen="allowfullscreen" allow="fullscreen"
-                title="Victor Fateh's Resume">
-              </iframe>
-            </div>
-          </div>
-        </main>
+<body class="bg-dark-bg text-dark-text antialiased" style="max-width: 900px; padding-left: 0; padding-right: 0;">
+  <main class="px-3 py-8 md:py-16">
+
+    <a href="/" class="accent-link inline-flex items-center gap-1 text-sm mb-8">
+      &larr; Back
+    </a>
+
+    <div class="resume-wrap">
+      <div class="resume-loader" id="loader">
+        <span></span>
       </div>
+      <iframe loading="lazy"
+        src="https://www.canva.com/design/DAFpi9YX6y0/view?embed"
+        allowfullscreen="allowfullscreen" allow="fullscreen"
+        title="Victor Fateh's Resume"
+        id="resume-frame"
+        onload="this.classList.add('loaded');document.getElementById('loader').classList.add('hidden')">
+      </iframe>
     </div>
-  </div>
+
+  </main>
 </body>
 
 </html>

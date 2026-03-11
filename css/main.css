@@ -1,15 +1,27 @@
-/*
- * Selection highlight styling
- */
-
 ::selection {
-  background: #b3d4fc;
+  background: rgba(79, 70, 229, 0.4);
   text-shadow: none;
 }
 
-/*
- * Print styles
- */
+.accent-link {
+  color: #818cf8;
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+.accent-link:hover {
+  color: #a5b4fc;
+  filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+  }
+}
 
 @media print {
   *,

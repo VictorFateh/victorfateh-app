@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "Fateh"
-    ]
+    ],
+    "editor.unicodeHighlight.allowedCharacters": {
+        "\u2013": true
+    }
 }

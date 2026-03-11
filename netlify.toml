@@ -6,6 +6,11 @@
   NODE_VERSION = "24"
 
 [[redirects]]
+  from = "/hi*"
+  to = "/"
+  status = 301
+
+[[redirects]]
   from = "/*"
   to = "/404.html"
   status = 404

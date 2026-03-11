@@ -151,14 +151,6 @@
       var painted = new Set();
       var radius = 60;
 
-      chars.forEach(function (c) {
-        c.style.display = 'inline-block';
-      });
-
-      heading.addEventListener('mouseenter', function () {
-        chars.forEach(function (c) { c.style.willChange = 'transform'; });
-      });
-
       heading.addEventListener('mousemove', function (e) {
         var mx = e.clientX;
         var my = e.clientY;
@@ -189,10 +181,7 @@
           textShadow: 'none',
           duration: 0.6,
           ease: 'power2.out',
-          stagger: { each: 0.03, from: 'random' },
-          onComplete: function () {
-            chars.forEach(function (c) { c.style.willChange = 'auto'; });
-          }
+          stagger: { each: 0.03, from: 'random' }
         });
       });
     })();

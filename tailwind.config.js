@@ -27,12 +27,12 @@ module.exports = {
       },
       keyframes: {
         'fade-in': {
-          '0%': { opacity: '0', filter: 'blur(6px)', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', filter: 'blur(0px)', transform: 'translateY(0)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
       animation: {
-        'fade-in': 'fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in': 'fade-in 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both',
       },
     },
   },

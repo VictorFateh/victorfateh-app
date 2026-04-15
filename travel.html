@@ -294,34 +294,66 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
     // ── Mobile swipe gestures ─────────────────────────────────────────────────
     (function () {
       const panel = document.getElementById('city-panel');
-      let startY = 0, startH = 0;
+      let startY = 0, currentY = 0, dragging = false;
+      const PEEK_H = 180, FULL_H = Math.round(window.innerHeight * 0.75);
 
       panel.addEventListener('touchstart', e => {
         if (!isMobile()) return;
-        startY = e.touches[0].clientY;
-        startH = panel.offsetHeight;
-      }, { passive: true });
+        e.stopPropagation();
+        startY   = e.touches[0].clientY;
+        currentY = startY;
+        dragging = false;
+        // Disable CSS transition during drag for immediate response
+        panel.style.transition = 'none';
+      }, { passive: false });
+
+      panel.addEventListener('touchmove', e => {
+        if (!isMobile()) return;
+        e.stopPropagation();
+
+        // Only intercept vertical drags; let horizontal pass (e.g. scrolling content)
+        const body = document.getElementById('city-panel-body');
+        const scrollable = panel.classList.contains('open') && body.scrollHeight > body.clientHeight && body.scrollTop > 0;
+        if (scrollable) return; // let content scroll normally
+
+        currentY = e.touches[0].clientY;
+        const dy = currentY - startY;
+
+        if (!dragging && Math.abs(dy) > 4) dragging = true;
+        if (!dragging) return;
+
+        // Live-resize panel height while dragging
+        const baseH = panel.classList.contains('open') ? FULL_H : PEEK_H;
+        const newH  = Math.max(60, Math.min(FULL_H, baseH - dy));
+        panel.style.height = newH + 'px';
+        e.preventDefault();
+      }, { passive: false });
 
       panel.addEventListener('touchend', e => {
         if (!isMobile()) return;
-        const dy = e.changedTouches[0].clientY - startY;
+        e.stopPropagation();
+
+        // Re-enable transition
+        panel.style.transition = '';
+        panel.style.height     = '';
+
+        if (!dragging) return;
+
+        const dy = currentY - startY;
 
         if (dy > 60) {
-          // Swipe down
           if (panel.classList.contains('open')) {
-            // Full → peek
             panel.classList.replace('open', 'peek');
           } else {
-            // Peek → close
             closePanel();
           }
         } else if (dy < -60) {
-          // Swipe up → expand to full
           if (panel.classList.contains('peek')) {
             panel.classList.replace('peek', 'open');
           }
         }
-      }, { passive: true });
+        // else snap back — CSS transition restores via class height
+      }, { passive: false });
     })();
 
     // ── Section accordion ─────────────────────────────────────────────────────

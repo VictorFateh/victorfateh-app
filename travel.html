@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Travel – Victor Fateh</title>
   <meta name="description" content="Victor Fateh’s personal city guides. Real spots, no filler.">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:title" content="Travel with Victor – Victor Fateh">
   <meta property="og:description" content="Victor Fateh’s personal city guides. Real spots, no filler.">
   <link rel="manifest" href="site.webmanifest">
@@ -112,7 +112,7 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
 
     // ── Map ───────────────────────────────────────────────────────────────────
     const map = L.map('travel-map', {
-      center: [10, 148],
+      center: [-12, 136],
       zoom: 3,
       zoomControl: false,
       attributionControl: false,
@@ -249,7 +249,12 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       body.scrollTop  = 0;
 
       const panel = document.getElementById('city-panel');
-      panel.classList.add('open');
+      if (isMobile()) {
+        panel.classList.remove('open');
+        panel.classList.add('peek');
+      } else {
+        panel.classList.add('open');
+      }
       panel.setAttribute('aria-hidden', 'false');
       activePanelId = id;
 
@@ -265,8 +270,8 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
 
     function closePanel() {
       const panel = document.getElementById('city-panel');
-      if (!panel.classList.contains('open')) return;
-      panel.classList.remove('open');
+      if (!panel.classList.contains('open') && !panel.classList.contains('peek')) return;
+      panel.classList.remove('open', 'peek');
       panel.setAttribute('aria-hidden', 'true');
 
       if (activePanelId && cityMarkers[activePanelId]) {
@@ -277,8 +282,47 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       renderCityList(null);
     }
 
+    document.getElementById('city-panel-header').addEventListener('click', e => {
+      const panel = document.getElementById('city-panel');
+      if (isMobile() && panel.classList.contains('peek') && !e.target.closest('#city-panel-close')) {
+        panel.classList.replace('peek', 'open');
+      }
+    });
     document.getElementById('city-panel-close').addEventListener('click', closePanel);
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+    // ── Mobile swipe gestures ─────────────────────────────────────────────────
+    (function () {
+      const panel = document.getElementById('city-panel');
+      let startY = 0, startH = 0;
+
+      panel.addEventListener('touchstart', e => {
+        if (!isMobile()) return;
+        startY = e.touches[0].clientY;
+        startH = panel.offsetHeight;
+      }, { passive: true });
+
+      panel.addEventListener('touchend', e => {
+        if (!isMobile()) return;
+        const dy = e.changedTouches[0].clientY - startY;
+
+        if (dy > 60) {
+          // Swipe down
+          if (panel.classList.contains('open')) {
+            // Full → peek
+            panel.classList.replace('open', 'peek');
+          } else {
+            // Peek → close
+            closePanel();
+          }
+        } else if (dy < -60) {
+          // Swipe up → expand to full
+          if (panel.classList.contains('peek')) {
+            panel.classList.replace('peek', 'open');
+          }
+        }
+      }, { passive: true });
+    })();
 
     // ── Section accordion ─────────────────────────────────────────────────────
     // Delegated — no inline onclick needed

@@ -168,13 +168,13 @@
   border: 1px solid rgba(129, 140, 248, 0.26);
 }
 
-/* ── City guide panel — desktop: slides from right ───────────────────── */
+/* ── City guide panel — desktop: slides from right inside map ────────── */
 #city-panel {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(440px, 100vw);
+  width: min(380px, 50%);
   background: #171728;
   border-left: 1px solid rgba(255, 255, 255, 0.07);
   z-index: 1000;
@@ -182,6 +182,7 @@
   transition: transform 0.32s cubic-bezier(0.25, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
+  border-radius: 0 16px 16px 0;
 }
 
 #city-panel.open {
@@ -512,47 +513,33 @@ mark.search-hl {
     display: flex;
   }
 
-  /* Panel slides up from bottom on mobile */
+  /* Panel covers full map on mobile — simple open/close, no drag */
   #city-panel {
-    top: auto;
+    position: absolute;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    height: 75vh;
+    height: 100%;
     border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px 16px 0 0;
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5), 0 -1px 6px rgba(255, 255, 255, 0.04);
+    border-radius: 0;
     transform: translateY(100%);
-    transition: transform 0.32s cubic-bezier(0.25, 0, 0.2, 1),
-                height 0.32s cubic-bezier(0.25, 0, 0.2, 1);
+    transition: transform 0.32s cubic-bezier(0.25, 0, 0.2, 1);
   }
 
   #city-panel.open {
     transform: translateY(0);
-    height: 75vh;
+    height: 100%;
   }
 
-  /* Peek state — header + search visible */
+  /* No peek state on mobile — hide drag handle */
   #city-panel.peek {
-    transform: translateY(0);
-    height: 28vh;
-    min-height: 180px;
-    max-height: 260px;
-    overflow: hidden;
+    transform: translateY(100%);
   }
 
-  /* Drag handle visual affordance */
   #city-panel-inner::before {
-    content: '';
-    display: block;
-    width: 36px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: 2px;
-    margin: 0.6rem auto 0;
-    flex-shrink: 0;
+    display: none;
   }
 
   .cat-summary { min-height: 48px; }

@@ -4,10 +4,10 @@
 <head>
   <meta charset="utf-8">
   <title>Travel – Victor Fateh</title>
-  <meta name="description" content="Victor Fateh’s personal city guides. Real spots, no filler.">
+  <meta name="description" content="Victor Fateh’s personal city guides.">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:title" content="Travel with Victor – Victor Fateh">
-  <meta property="og:description" content="Victor Fateh’s personal city guides. Real spots, no filler.">
+  <meta property="og:description" content="Victor Fateh’s personal city guides.">
   <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="icon" href="favicon.ico">
@@ -295,7 +295,7 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
     (function () {
       const panel = document.getElementById('city-panel');
       let startY = 0, currentY = 0, dragging = false;
-      const PEEK_H = 180, FULL_H = Math.round(window.innerHeight * 0.75);
+      const PEEK_H = Math.min(260, Math.max(180, Math.round(window.innerHeight * 0.28))), FULL_H = Math.round(window.innerHeight * 0.75);
 
       panel.addEventListener('touchstart', e => {
         if (!isMobile()) return;
@@ -387,9 +387,12 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
     }
 
     // ── Render guide HTML ─────────────────────────────────────────────────────
-    function renderGuideHTML(city, sections, query, autoOpen) {
+    function renderGuideHTML(city, sections, query, autoOpen, noResults) {
       const q = query.toLowerCase().trim();
       if (!sections) {
+        if (noResults) {
+          return '<div class="city-guide"><p class="city-guide-meta">No spots match \u201c' + query.replace(/</g, '&lt;') + '\u201d</p></div>';
+        }
         return '<div class="city-guide"><p class="city-guide-meta">Notes coming soon.</p></div>';
       }
 
@@ -483,7 +486,8 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       const city     = CITIES.find(c => c.id === activePanelId);
       const sections = city.txt ? (TRAVEL_DATA[city.txt] ?? null) : null;
       const results  = q ? fuzzyFilterSections(sections, q) : sections;
-      document.getElementById('city-panel-body').innerHTML = renderGuideHTML(city, results, q, q.length > 0);
+      const noResults = q && !results && !!sections;
+      document.getElementById('city-panel-body').innerHTML = renderGuideHTML(city, results, q, q.length > 0, noResults);
     }
 
     // ── Fuzzy search ──────────────────────────────────────────────────────────

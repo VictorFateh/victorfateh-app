@@ -258,6 +258,7 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       if (isMobile()) {
         cityListOpen = false;
         updateCityListVisibility();
+        document.body.style.overflow = 'hidden';
       }
 
       map.flyTo([city.lat, city.lng], 9, { duration: 1.0 });
@@ -268,6 +269,7 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       if (!panel.classList.contains('open') && !panel.classList.contains('peek')) return;
       panel.classList.remove('open', 'peek');
       panel.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
 
       if (activePanelId && cityMarkers[activePanelId]) {
         const prev = CITIES.find(c => c.id === activePanelId);

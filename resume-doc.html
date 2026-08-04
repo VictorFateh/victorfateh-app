@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Victor Fateh - Resume</title>
+<meta name="author" content="Victor Fateh">
+<meta name="description" content="Victor Fateh - Lead Product Manager">
+<style>
+  @font-face { font-family: 'HK Grotesk'; font-weight: 500; src: url('fonts/hanken-grotesk-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'HK Grotesk'; font-weight: 600; src: url('fonts/hanken-grotesk-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'HK Grotesk'; font-weight: 700; src: url('fonts/hanken-grotesk-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Roboto'; font-weight: 400; src: url('fonts/roboto-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Roboto'; font-weight: 500; src: url('fonts/roboto-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Roboto'; font-weight: 700; src: url('fonts/roboto-latin-700-normal.woff2') format('woff2'); }
+
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 210mm; height: 297mm; }
+  body { font-family: 'Roboto', sans-serif; color: #444; background: #fff; position: relative; }
+  a { color: inherit; text-decoration: none; }
+
+  /* Sidebar background painted separately so columns never overflow the page */
+  .side-bg { position: absolute; top: 36mm; left: 0; width: 65mm; height: 261mm; background: #f5f5f5; }
+
+  /* ---------- Header ---------- */
+  .header { height: 36mm; text-align: center; padding-top: 9mm; }
+  .name { font-family: 'HK Grotesk', sans-serif; font-weight: 600; font-size: 25pt; letter-spacing: 0.30em; margin-right: -0.30em; color: #3a3a3a; }
+  .tagline { font-size: 8pt; line-height: 1.55; color: #555; max-width: 146mm; margin: 3mm auto 0; }
+
+  /* ---------- Columns ---------- */
+  .columns { display: flex; width: 100%; position: relative; }
+  .sidebar { width: 65mm; padding: 5.5mm 6mm 6mm 7.5mm; }
+  .main { width: 145mm; padding: 5mm 8mm 4mm 7mm; }
+
+  h2 { font-family: 'HK Grotesk', sans-serif; font-weight: 600; font-size: 10pt; letter-spacing: 0.30em; color: #3a3a3a; text-transform: uppercase; }
+  h2::after { content: ""; display: block; width: 5.4mm; height: 0.55mm; background: #FF6552; border-radius: 1mm; margin-top: 1.3mm; }
+
+  /* ---------- Sidebar ---------- */
+  .side-section { padding-bottom: 4.2mm; margin-bottom: 4.2mm; border-bottom: 1px dashed #c4c4c4; }
+  .side-section:last-child { border-bottom: none; margin-bottom: 0; }
+  .sidebar h2 { margin-bottom: 2.8mm; }
+  .contact-row { display: flex; align-items: center; margin-bottom: 2.4mm; font-size: 7.8pt; color: #4a4a4a; }
+  .contact-row:last-child { margin-bottom: 0; }
+  .contact-row svg { width: 3.6mm; height: 3.6mm; margin-right: 2.6mm; flex: none; }
+  .skill-group { margin-bottom: 4.8mm; }
+  .skill-group h3 { font-size: 7.8pt; font-weight: 700; color: #3d3d3d; margin-bottom: 1.4mm; }
+  .sidebar ul { list-style: none; }
+  .sidebar li { font-size: 7.6pt; line-height: 1.4; color: #4f4f4f; padding-left: 3.4mm; position: relative; margin-bottom: 0.7mm; }
+  .sidebar li::before { content: "•"; position: absolute; left: 0.6mm; color: #4f4f4f; }
+  .sidebar li b { color: #3d3d3d; }
+  .tool-row { display: flex; margin-bottom: 1.6mm; }
+  .tool-row:last-child { margin-bottom: 0; }
+  .tool-label { width: 17mm; flex: none; font-size: 6.1pt; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: #949494; padding-top: 0.4mm; padding-right: 1mm; }
+  .tool-val { font-size: 7.4pt; line-height: 1.4; color: #4a4a4a; }
+  .tool-val i { font-style: normal; color: #b0b0b0; }
+  .pills { line-height: 1; }
+  .pills span { display: inline-block; box-sizing: border-box; border: 0.5pt solid #c2c2c2; border-radius: 3mm; padding: 0.9mm 2.4mm 1mm; margin: 0 0.8mm 1.4mm 0; font-size: 7.2pt; line-height: 1; color: #4f4f4f; background: #fff; }
+  .edu-school { font-size: 7.8pt; color: #4f4f4f; margin-bottom: 0.8mm; }
+  .edu-degree { font-family: 'HK Grotesk', sans-serif; font-weight: 700; font-size: 9pt; color: #3a3a3a; }
+
+  /* ---------- Experience ---------- */
+  /* Single text axis: title, company & bullet text all align at 10.6mm; markers hang in the gutter */
+  .main h2 { margin-bottom: 3.2mm; }
+  .entry { margin-bottom: 3.3mm; position: relative; }
+  .entry-head { display: flex; align-items: center; margin-bottom: 1.5mm; }
+  .chip { width: 8.6mm; height: 8.6mm; border-radius: 1.9mm; margin-right: 2.8mm; flex: none; }
+  .head-text { flex: 1; }
+  .title { font-family: 'HK Grotesk', sans-serif; font-weight: 600; font-size: 11pt; color: #2e2e2e; line-height: 1.12; }
+  .co-name { font-family: 'HK Grotesk', sans-serif; font-weight: 600; font-size: 12.5pt; color: #2e2e2e; line-height: 1.1; }
+  .company { font-size: 8.5pt; font-weight: 500; color: #555; margin-top: 0.5mm; }
+  .dates { font-size: 8pt; color: #6d6d6d; align-self: center; white-space: nowrap; }
+  .bullets { list-style: none; }
+  .bullets li { font-size: 7.6pt; line-height: 1.28; color: #454545; margin-left: 11.4mm; position: relative; margin-bottom: 0.7mm; }
+  .bullets li::before { content: "•"; position: absolute; left: -3.2mm; color: #9a9a9a; }
+  .bullets b { font-weight: 500; color: #2b2b2b; }
+
+  /* ---------- Multi-role tenures (Blinq, Socotra): LinkedIn-style role timeline ---------- */
+  .timeline { position: relative; }
+  .t-line { position: absolute; left: 4.13mm; top: 4mm; bottom: 2.2mm; width: 0.35mm; background: #d4d4d4; }
+  .role { display: flex; align-items: baseline; padding-left: 11.4mm; margin: 1.6mm 0 1mm; position: relative; }
+  .timeline .role:first-of-type { margin-top: 1.2mm; }
+  .role::before { content: ""; position: absolute; box-sizing: border-box; left: 3.15mm; top: 50%; margin-top: -1.15mm; width: 2.3mm; height: 2.3mm; border-radius: 50%; }
+  .role.current::before { background: #FF6552; }
+  .role.navy::before { background: #101C2C; }
+  .role.past::before { background: #fff; border: 0.45mm solid #b0b0b0; }
+  .role-title { font-family: 'HK Grotesk', sans-serif; font-weight: 600; font-size: 10pt; color: #2e2e2e; }
+  .role-sub { font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 7.6pt; color: #6d6d6d; }
+  .role .dates { margin-left: auto; }
+
+  /* ---------- Footer rule ---------- */
+  .footer-rule { position: absolute; bottom: 6mm; left: 8mm; right: 8mm; border-top: 0.5pt solid #cfcfcf; }
+
+  /* Screen-only: scale the fixed A4 page to the viewport (iframe) width. Print/WeasyPrint unaffected.
+     html must track the viewport (not the fixed 210mm) so the ResizeObserver sees size changes. */
+  @media screen {
+    html { width: auto; height: auto; overflow: hidden; }
+    body { transform-origin: top left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="side-bg"></div>
+
+<div class="header">
+  <div class="name">VICTOR FATEH</div>
+  <div class="tagline">Engineer turned PM with 8+ years shipping at scale in regulated industries, across consumer mobile and backend SaaS, lately AI. I lead multi-team portfolios, sweat the details, and turn complexity into focused bets.</div>
+</div>
+
+<div class="columns">
+
+  <!-- ================= SIDEBAR ================= -->
+  <div class="sidebar">
+
+    <div class="side-section">
+      <h2>Contact</h2>
+      <div class="contact-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4a4a4a" stroke-width="1.6"><rect x="2.5" y="5" width="19" height="14" rx="1.5"/><path d="M3 6l9 7 9-7"/></svg>
+        <a href="mailto:victorsfateh@gmail.com">victorsfateh@gmail.com</a>
+      </div>
+      <div class="contact-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4a4a4a" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.4 4 5.6 4 9s-1.4 6.6-4 9c-2.6-2.4-4-5.6-4-9s1.4-6.6 4-9z"/></svg>
+        <a href="https://www.victorfateh.com">victorfateh.com</a>
+      </div>
+      <div class="contact-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4a4a4a" stroke-width="1.6"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        Sydney, Australia
+      </div>
+    </div>
+
+    <div class="side-section">
+      <h2>Skills</h2>
+      <div class="skill-group">
+        <h3>Product</h3>
+        <ul>
+          <li>Outcome-driven product strategy</li>
+          <li>Multi-team portfolio leadership</li>
+          <li>Cross-functional orchestration (eng, design, GTM, ops)</li>
+          <li>Experimentation &amp; evidence-based bets</li>
+          <li>Pricing, packaging &amp; commercials</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>AI</h3>
+        <div class="tool-row"><div class="tool-label">Shipped</div><div class="tool-val">AI Insights, Blinq MCP, Blinq Prospector</div></div>
+        <div class="tool-row"><div class="tool-label">Workflows</div><div class="tool-val">Claude, ChatGPT, Clay</div></div>
+        <div class="tool-row"><div class="tool-label">Prototyping</div><div class="tool-val">v0, Lovable, Cursor</div></div>
+      </div>
+      <div class="skill-group">
+        <h3>Tools</h3>
+        <div class="tool-row"><div class="tool-label">Forecasting</div><div class="tool-val">ChartMogul, SQL</div></div>
+        <div class="tool-row"><div class="tool-label">Analytics</div><div class="tool-val">Amplitude, Mixpanel, Datadog</div></div>
+        <div class="tool-row"><div class="tool-label">Customers</div><div class="tool-val">Gong, HubSpot, Intercom</div></div>
+        <div class="tool-row"><div class="tool-label">Design</div><div class="tool-val">Figma, Miro, Canva</div></div>
+        <div class="tool-row"><div class="tool-label">Planning</div><div class="tool-val">Linear, Notion, Jira</div></div>
+        <div class="tool-row"><div class="tool-label">Build</div><div class="tool-val">TS, JS, Node, Vue, Git, <span style="white-space:nowrap">CI/CD</span></div></div>
+      </div>
+      <div class="skill-group" style="margin-bottom:0">
+        <h3>Other</h3>
+        <div class="pills">
+          <span>Photography</span><span>Filmmaking</span><span>Color theory</span><span>Aviation</span><span>Overlanding</span><span>Human centered design</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-section">
+      <h2>Languages</h2>
+      <ul>
+        <li>English</li>
+        <li>French</li>
+        <li>Spanish</li>
+      </ul>
+    </div>
+
+    <div class="side-section">
+      <h2>Education</h2>
+      <div class="edu-school">San Jose State University</div>
+      <div class="edu-degree">Bachelor's in Computer Science</div>
+    </div>
+
+  </div>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+    <h2>Experience</h2>
+
+    <!-- Blinq: two roles, one tenure -->
+    <div class="entry">
+      <div class="entry-head">
+        <img class="chip" src="assets/blinq.png">
+        <div class="head-text">
+          <div class="co-name">Blinq</div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="t-line"></div>
+        <div class="role current">
+          <div class="role-title">Lead Product Manager</div>
+          <div class="dates">2026 &ndash; Present</div>
+        </div>
+        <ul class="bullets">
+          <li>Group lead on the Business, Integrations &amp; Workspaces teams: cross-team prioritization, hiring &amp; delivery</li>
+          <li>Own product strategy across all of Blinq: roadmap, pricing &amp; packaging for the full B2B portfolio</li>
+          <li>Increased ACV by <b>5X</b> with the launch of new product tiers</li>
+          <li>Increased user activation from <b>22% to 40%</b> with better onboarding &amp; nurturing</li>
+        </ul>
+        <div class="role past">
+          <div class="role-title">Sr. Product Manager</div>
+          <div class="dates">2025 &ndash; 2026</div>
+        </div>
+      </div>
+      <ul class="bullets">
+        <li><b>40+ experiments</b> across activation, retention &amp; churn reduction</li>
+        <li>Launched Blinq Campaigns, Lead Capture, Workspace tags &amp; the integrations ecosystem in under 3 months; the highest feature velocity in Blinq's history</li>
+        <li>Shipped AI Insights and co-built Blinq's MCP server with the team, opening the product to customers' AI workflows</li>
+        <li>Revived engagement with sales &amp; users via weekly show-tells, voice-of-customer sessions &amp; lifecycle marketing</li>
+        <li>Reached feature parity with top 2 competitors in my first 6 months, reducing enterprise sales loss by <b>~35%</b></li>
+      </ul>
+    </div>
+
+    <!-- Kanopi -->
+    <div class="entry">
+      <div class="entry-head">
+        <img class="chip" src="assets/kanopi.png">
+        <div class="head-text">
+          <div class="title">Sr. Product Manager</div>
+          <div class="company">Kanopi Cover</div>
+        </div>
+        <div class="dates">2023 &ndash; 2025</div>
+      </div>
+      <ul class="bullets">
+        <li>Transitioned Kanopi from a service org to a product-driven one</li>
+        <li>Drove the product roadmap to target key enterprise clients, going from <b>0 customers to 4</b> in six months, each with ARR of <b>$150K+</b></li>
+        <li>Identified and eliminated redundant infrastructure, saving the company <b>A$100,000 annually</b> in hosting &amp; logging expenses</li>
+        <li>Re-defined roadmap to align with GTM, team capacity &amp; vision</li>
+        <li>Worked closely with executive, marketing, eng &amp; design teams to align on customer outcomes</li>
+        <li>Engaged with prospects &amp; customers continuously to identify key unmet needs and drive user growth</li>
+      </ul>
+    </div>
+
+    <!-- Socotra: two roles, one tenure -->
+    <div class="entry">
+      <div class="entry-head">
+        <img class="chip" src="assets/socotra.png">
+        <div class="head-text">
+          <div class="co-name">Socotra</div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="t-line"></div>
+        <div class="role navy">
+          <div class="role-title">Product Lead <span class="role-sub">&middot; App Marketplace</span></div>
+          <div class="dates">2020 &ndash; 2023</div>
+        </div>
+        <ul class="bullets">
+          <li>Launched the insurance industry's first no-code ecosystem: from ideation to delivery to scale</li>
+          <li>Marketplace accounted for <b>40% of Series C funding</b>, $20M of the $50M total (USD)</li>
+          <li>Leveraged an iterative product plan to deliver critical features just-in-time, leading to an average of <b>+20% in upsell</b> per customer</li>
+          <li>Hired &amp; managed cross-functional teams in the US &amp; Australia</li>
+          <li>Worked with internal stakeholders: exec, partnerships, marketing, sales &amp; support teams</li>
+          <li>Engaged closely with customers to understand their needs and incorporate it into the product</li>
+        </ul>
+        <div class="role past">
+          <div class="role-title">Sr. Solutions Engineer <span class="role-sub">&middot; Core Platform</span></div>
+          <div class="dates">2019 &ndash; 2020</div>
+        </div>
+      </div>
+      <ul class="bullets">
+        <li>The first solutions engineer hire &amp; <b>employee #9</b> at Socotra</li>
+        <li>Technical advisor, subject-matter expert and problem solver for enterprise customers</li>
+        <li>Defined project architecture best practices with enterprise engineering teams</li>
+        <li>Planning, discovery, implementation, risk mitigation and launch</li>
+        <li>Worked with cross-functional teams to define product integrations, training &amp; implementations</li>
+        <li>Pre-sales support, post-sales customer success and solution design</li>
+      </ul>
+    </div>
+
+    <!-- Stanford -->
+    <div class="entry" style="margin-bottom:0">
+      <div class="entry-head">
+        <img class="chip" src="assets/stanford.png" style="border-radius:0">
+        <div class="head-text">
+          <div class="title">Software Engineer</div>
+          <div class="company">Stanford School of Medicine</div>
+        </div>
+        <div class="dates">2018 &ndash; 2019</div>
+      </div>
+      <ul class="bullets">
+        <li>Turned a <b>$10M microscope</b> into a <b>$20 disposable</b> one</li>
+        <li>Developed radioluminescence microscopy software for med-teams</li>
+        <li>Implemented the camera module &amp; imagery integration, optimized for embeddable hardware</li>
+        <li>Defined open-source strategy and introduced public documentation</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-rule"></div>
+
+<script>
+  (function () {
+    function fit() {
+      document.body.style.transform =
+        'scale(' + document.documentElement.clientWidth / document.body.offsetWidth + ')';
+    }
+    new ResizeObserver(fit).observe(document.documentElement);
+    window.addEventListener('resize', fit);
+    fit();
+  })();
+</script>
+
+</body>
+</html>

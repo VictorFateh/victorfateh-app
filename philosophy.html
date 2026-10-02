@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>How I build teams – Victor Fateh</title>
+  <meta name="description" content="The short version of my talk on building teams that actually deliver: context, shared scope, cognitive bias, estimates and fast feedback.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="How I build teams – Victor Fateh">
+  <meta property="og:description" content="This is the short version of my talk on building teams that actually deliver.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.victorfateh.com/philosophy">
+  <link rel="canonical" href="https://www.victorfateh.com/philosophy">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/tailwind.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/overwrites.css">
+  <link rel="stylesheet" href="css/philosophy.css">
+  <meta name="theme-color" content="#0a0a14">
+</head>
+
+<body class="bg-dark-bg text-dark-text antialiased philosophy-page">
+  <a class="skip-link" href="#principles">Skip to the principles</a>
+
+  <header class="page-header">
+    <a href="/" class="back-link"><span aria-hidden="true">←</span> Victor Fateh</a>
+  </header>
+
+  <main id="main">
+    <div class="philosophy-intro">
+      <h1>How I build teams</h1>
+      <p class="intro-copy">This is the short version of my talk on building teams that actually deliver. <br>How we work changes over time, the core principles do not.</p>
+    </div>
+
+    <div id="principles" class="principles">
+      <section id="trust" class="principle" aria-labelledby="trust-title">
+        <div class="principle-copy">
+          <h2 id="trust-title">Invert the pyramid</h2>
+          <p>The team makes the calls. Leadership makes the goal clear and sorts out whatever’s stopping them. If every decision needs my approval, I’m the bottleneck.</p>
+          <p>Give people challenging work and room to grow.</p>
+          <p class="section-sources"><a href="#source-mcgregor">McGregor on Theory Y</a> · <a href="#source-maslow">Maslow on motivation</a> · <a href="#source-retention">Sutherland &amp; Jordaan</a> · <a href="#source-leadership">Muñoz Pérez &amp; Irún Molina</a></p>
+        </div>
+        <figure class="principle-visual">
+          <svg viewBox="0 0 360 250" role="img" aria-labelledby="trust-diagram-title trust-diagram-desc">
+            <title id="trust-diagram-title">An organisation built to support its team</title>
+            <desc id="trust-diagram-desc">An inverted pyramid places teams at the broad top, managers beneath, and leadership at the base. Support flows upwards.</desc>
+            <path class="diagram-fill-accent" d="M20 48H308L276 102H52Z"/>
+            <path class="diagram-fill" d="M58 112H270L238 164H90Z"/>
+            <path class="diagram-fill" d="M96 174H232L204 230H124Z"/>
+            <text class="diagram-text bright" x="164" y="80" text-anchor="middle">Teams</text>
+            <text class="diagram-text" x="164" y="143" text-anchor="middle">Managers</text>
+            <text class="diagram-text" x="164" y="207" text-anchor="middle">Leadership</text>
+            <path class="diagram-line highlight-stroke" d="M332 212V45m-5 6 5-6 5 6"/>
+            <text class="diagram-text highlight-text" x="348" y="24" text-anchor="end">Support &amp; context</text>
+          </svg>
+        </figure>
+      </section>
+
+      <section id="context" class="principle" aria-labelledby="context-title">
+        <div class="principle-copy">
+          <h2 id="context-title">Context is critical</h2>
+          <p>A ticket can be a keyhole view of the work. Everyone sees a small part and fills in the rest themselves.</p>
+          <p>Show the whole picture. Who’s this for, what are we trying to change, and what’s getting in the way?</p>
+          <p class="section-sources"><a href="#source-drucker">Drucker on shared goals</a> · <a href="#source-scrum">Scrum Guide on transparency</a> · <a href="#source-dale">Dale on learning through experience</a></p>
+        </div>
+        <figure class="principle-visual">
+          <svg viewBox="0 0 360 230" role="img" aria-labelledby="context-diagram-title context-diagram-desc">
+            <title id="context-diagram-title">From an isolated task to shared context</title>
+            <desc id="context-diagram-desc">One isolated task becomes a decision connected to the customer, their problem, the goal, and constraints.</desc>
+            <rect class="diagram-fill" x="12" y="82" width="74" height="58" rx="5"/>
+            <text class="diagram-text" x="49" y="117" text-anchor="middle">Task</text>
+            <path class="diagram-line" d="M103 111H135m-6-5 6 5-6 5"/>
+            <path class="diagram-line" d="M218 86 192 52M273 86 308 52M218 130 185 170M273 130 309 170"/>
+            <rect class="diagram-fill-accent" x="198" y="86" width="94" height="44" rx="22"/>
+            <text class="diagram-text bright" x="245" y="113" text-anchor="middle">Decision</text>
+            <circle class="diagram-node" cx="188" cy="44" r="7"/>
+            <circle class="diagram-node" cx="311" cy="44" r="7"/>
+            <circle class="diagram-node" cx="180" cy="176" r="7"/>
+            <circle class="diagram-node" cx="314" cy="176" r="7"/>
+            <text class="diagram-text small" x="188" y="24" text-anchor="middle">Customer</text>
+            <text class="diagram-text small" x="311" y="24" text-anchor="middle">Problem</text>
+            <text class="diagram-text small" x="180" y="205" text-anchor="middle">Goal</text>
+            <text class="diagram-text small" x="310" y="205" text-anchor="middle">Constraints</text>
+          </svg>
+        </figure>
+      </section>
+
+      <section id="scope" class="principle" aria-labelledby="scope-title">
+        <div class="principle-copy">
+          <h2 id="scope-title">Shared understanding of scope</h2>
+          <p>We don’t have scope until we have a shared understanding of scope.</p>
+          <dl class="scope-questions">
+            <div><dt>Problem:</dt> <dd>What are we solving?</dd></div>
+            <div><dt>Boundaries:</dt> <dd>What’s included and excluded?</dd></div>
+            <div><dt>Done:</dt> <dd>What has to be true before we call it finished?</dd></div>
+          </dl>
+          <p>Agree on all three with the people building it. Take turns, ask before telling, and give people time to think.</p>
+          <p class="section-sources"><a href="#source-scrum">Scrum Guide on planning &amp; Definition of Done</a> · <a href="#source-collective">Woolley and colleagues</a> · <a href="#source-human-dynamics">Seagal &amp; Horne</a></p>
+        </div>
+        <figure class="principle-visual">
+          <svg viewBox="0 0 360 250" role="img" aria-labelledby="scope-diagram-title scope-diagram-desc">
+            <title id="scope-diagram-title">Scope lives in shared understanding</title>
+            <desc id="scope-diagram-desc">Three overlapping circles represent agreement on the problem, the boundaries, and what finished looks like. The green centre marks shared scope.</desc>
+            <defs>
+              <clipPath id="scope-problem-clip">
+                <circle cx="134" cy="96" r="68"/>
+              </clipPath>
+              <clipPath id="scope-boundaries-clip">
+                <circle cx="226" cy="96" r="68"/>
+              </clipPath>
+            </defs>
+            <circle class="venn-circle" cx="134" cy="96" r="68"/>
+            <circle class="venn-circle" cx="226" cy="96" r="68"/>
+            <circle class="venn-circle" cx="180" cy="158" r="68"/>
+            <g clip-path="url(#scope-problem-clip)">
+              <g clip-path="url(#scope-boundaries-clip)">
+                <circle class="scope-overlap" cx="180" cy="158" r="68"/>
+              </g>
+            </g>
+            <text class="diagram-text small" x="110" y="82" text-anchor="middle">Problem</text>
+            <text class="diagram-text small" x="250" y="82" text-anchor="middle">Boundaries</text>
+            <text class="diagram-text small" x="180" y="194" text-anchor="middle">Done</text>
+            <path class="diagram-line highlight-stroke" d="M180 118 310 179V196"/>
+            <circle class="scope-marker" cx="180" cy="118" r="3"/>
+            <text class="diagram-text highlight-text" x="290" y="218" text-anchor="middle">Shared scope</text>
+          </svg>
+        </figure>
+      </section>
+
+      <section id="humans" class="principle" aria-labelledby="humans-title">
+        <div class="principle-copy">
+          <h2 id="humans-title">Understand cognitive bias</h2>
+          <p>Bias shapes which evidence we notice and what we dismiss. Past experience, money already spent and who’s in the room can all influence the call.</p>
+          <p>Ask what would change our minds. Would we make the same call if we were starting today?</p>
+          <p class="section-sources"><a href="#source-biases">50 cognitive biases</a></p>
+        </div>
+        <figure class="principle-visual">
+          <svg viewBox="0 0 360 250" role="img" aria-labelledby="humans-diagram-title humans-diagram-desc">
+            <title id="humans-diagram-title">Questions that check our assumptions</title>
+            <desc id="humans-diagram-desc">Three examples pair a biased assumption with a question. Confirmation bias: evidence backs our idea, so what says we’re wrong? Sunk cost: we’ve spent a lot, so is it worth starting today? Authority bias: the boss likes it, so what does the evidence say?</desc>
+            <text class="diagram-text small" x="14" y="23">The assumption</text>
+            <text class="diagram-text small" x="212" y="23">The question</text>
+            <path class="bias-divider" d="M14 98H346M14 172H346"/>
+            <text class="diagram-text small accent-text" x="14" y="53">Confirmation bias</text>
+            <text class="diagram-text small bright" x="14" y="76">It backs our idea.</text>
+            <path class="diagram-line highlight-stroke" d="M178 65H198m-6-5 6 5-6 5"/>
+            <text class="diagram-text highlight-text" x="212" y="61">What says</text>
+            <text class="diagram-text highlight-text" x="212" y="80">we’re wrong?</text>
+            <text class="diagram-text small accent-text" x="14" y="127">Sunk cost</text>
+            <text class="diagram-text small bright" x="14" y="150">We’ve spent a lot.</text>
+            <path class="diagram-line highlight-stroke" d="M178 139H198m-6-5 6 5-6 5"/>
+            <text class="diagram-text highlight-text" x="212" y="135">Worth starting</text>
+            <text class="diagram-text highlight-text" x="212" y="154">today?</text>
+            <text class="diagram-text small accent-text" x="14" y="201">Authority bias</text>
+            <text class="diagram-text small bright" x="14" y="224">The boss likes it.</text>
+            <path class="diagram-line highlight-stroke" d="M178 213H198m-6-5 6 5-6 5"/>
+            <text class="diagram-text highlight-text" x="212" y="209">What does the</text>
+            <text class="diagram-text highlight-text" x="212" y="228">evidence say?</text>
+          </svg>
+        </figure>
+      </section>
+
+      <section id="estimates" class="principle" aria-labelledby="estimates-title">
+        <div class="principle-copy">
+          <h2 id="estimates-title">Estimates are estimates</h2>
+          <p>The people doing the work own the sizing, that’s it. Before arguing about hours or points, ask who needs the number and what decision it helps them make.</p>
+          <p>We’re all too good at imagining everything going to plan. Look at what similar work actually took, split up the big stuff, and leave room for what we don’t know.</p>
+          <p class="section-sources"><a href="#source-planning">Buehler, Griffin &amp; Ross on the planning fallacy</a> · <a href="#source-scrum">Scrum Guide on sizing</a></p>
+        </div>
+        <figure class="principle-visual">
+          <svg viewBox="0 0 360 246" role="img" aria-labelledby="estimates-diagram-title estimates-diagram-desc">
+            <title id="estimates-diagram-title">Uncertainty widens with the planning horizon</title>
+            <desc id="estimates-diagram-desc">An illustrative range is narrow for work nearby and grows wider further into the future. It represents uncertainty, not measured data.</desc>
+            <path class="chart-guide" d="M40 48H326M40 113H326M40 178H326"/>
+            <path class="uncertainty-area" d="M42 107C145 101 205 75 320 33V193C205 151 145 125 42 119Z"/>
+            <path class="uncertainty-edge" d="M42 107C145 101 205 75 320 33M42 119C145 125 205 151 320 193"/>
+            <path class="diagram-line estimate-line" d="M42 113H320"/>
+            <circle class="diagram-node" cx="42" cy="113" r="5"/>
+            <path class="diagram-line" d="M42 211H320m-6-5 6 5-6 5"/>
+            <text class="diagram-text small" x="42" y="232">Near</text>
+            <text class="diagram-text small" x="320" y="232" text-anchor="end">Further out</text>
+            <text class="diagram-text small accent-text" x="214" y="107" text-anchor="middle">Possible outcomes</text>
+          </svg>
+          <figcaption>A sketch of planning uncertainty.</figcaption>
+        </figure>
+      </section>
+
+      <section id="feedback" class="principle" aria-labelledby="feedback-title">
+        <div class="principle-copy">
+          <h2 id="feedback-title">Inspect and adapt</h2>
+          <p>Pick a goal, deliver something people can use, then look at what happened. Keep releases small so customers get value sooner and we can change direction quickly.</p>
+          <p>The team runs the process, including the meetings. If we keep finding the same problem, we probably haven’t changed anything.</p>
+          <p class="section-sources"><a href="#source-agile">The original agile principles</a> · <a href="#source-scrum">Scrum Guide on reviews &amp; retros</a></p>
+        </div>
+        <figure class="principle-visual">
+          <svg viewBox="0 0 360 230" role="img" aria-labelledby="feedback-diagram-title feedback-diagram-desc">
+            <title id="feedback-diagram-title">Plan, deliver, learn, adapt, repeat</title>
+            <desc id="feedback-diagram-desc">A continuous loop connects planning, delivery, learning, and adaptation, with customer value at its centre.</desc>
+            <path class="diagram-line" d="M154 49H212m-6-5 6 5-6 5M283 74V149m-5-6 5 6 5-6M206 176H148m6-5-6 5 6 5M77 151V77m-5 6 5-6 5 6"/>
+            <rect class="diagram-fill" x="25" y="27" width="104" height="44" rx="22"/>
+            <rect class="diagram-fill-accent" x="231" y="27" width="104" height="44" rx="22"/>
+            <rect class="diagram-fill" x="231" y="154" width="104" height="44" rx="22"/>
+            <rect class="diagram-fill" x="25" y="154" width="104" height="44" rx="22"/>
+            <text class="diagram-text" x="77" y="54" text-anchor="middle">Plan</text>
+            <text class="diagram-text bright" x="283" y="54" text-anchor="middle">Deliver</text>
+            <text class="diagram-text" x="283" y="181" text-anchor="middle">Learn</text>
+            <text class="diagram-text" x="77" y="181" text-anchor="middle">Adapt</text>
+            <circle class="highlight-dot" cx="180" cy="101" r="4"/>
+            <text class="diagram-text small highlight-text" x="180" y="124" text-anchor="middle">Value</text>
+          </svg>
+        </figure>
+      </section>
+
+    </div>
+
+    <section class="team-summary" aria-labelledby="summary-title">
+      <h2 id="summary-title">Summary</h2>
+      <ul>
+        <li>The team owns its meetings and process.</li>
+        <li>One vision, a clear purpose and shared goals.</li>
+        <li>One conversation, with everyone involved.</li>
+        <li>Share context and keep decisions visible.</li>
+        <li>Build a shared understanding of scope.</li>
+        <li>Keep tasks small enough to finish and get feedback quickly.</li>
+        <li>Have discussions when they’re needed, with just enough documentation.</li>
+      </ul>
+    </section>
+
+    <section class="sources" aria-labelledby="sources-title">
+      <h2 id="sources-title">My sources</h2>
+      <p>Here's where I got my ideas from. No single person has all the answers, including me.</p>
+      <ul class="source-list">
+        <li id="source-biases">
+          <a href="https://www.visualcapitalist.com/50-cognitive-biases-in-the-modern-world/" target="_blank" rel="noopener noreferrer">50 Cognitive Biases in the Modern World</a>
+          <span class="source-meta">Marcus Lu · Visual Capitalist · 2020 · Graphic by TitleMax</span>
+          <p>50 ways my brain can confidently get it wrong. I sometimes tell people the most important “course” a PM could take is a session with a therapist.</p>
+        </li>
+        <li id="source-mcgregor">
+          <a href="https://web.mit.edu/curhan/www/docs/Articles/15341_Readings/Motivation/McGregor_The_Human_Side_of_Enterprise.pdf" target="_blank" rel="noopener noreferrer">The Human Side of Enterprise</a>
+          <span class="source-meta">Douglas McGregor · PDF</span>
+          <p>Trust people to do good work, then give them what they need.</p>
+        </li>
+        <li id="source-maslow">
+          <a href="https://psychclassics.yorku.ca/Maslow/motivation" target="_blank" rel="noopener noreferrer">A Theory of Human Motivation</a>
+          <span class="source-meta">Abraham Maslow · 1943</span>
+          <p>Start with the basics: do people feel safe, respected and part of the team?</p>
+        </li>
+        <li id="source-retention">
+          <a href="https://sajhrm.co.za/index.php/sajhrm/article/view/39" target="_blank" rel="noopener noreferrer">Factors Affecting the Retention of Knowledge Workers</a>
+          <span class="source-meta">Margie Sutherland &amp; Wilhelm Jordaan · 2004</span>
+          <p>306 people surveyed. Interesting work and room to grow matter.</p>
+        </li>
+        <li id="source-drucker">
+          <a href="https://www.oreilly.com/library/view/peter-f-drucker/9781633699687/Text/chapter07.html" target="_blank" rel="noopener noreferrer">Management by Objectives and Self-Control</a>
+          <span class="source-meta">Peter F. Drucker · Chapter excerpt</span>
+          <p>If nobody can explain why we’re doing the work, we’ve skipped a fairly important step.</p>
+        </li>
+        <li id="source-scrum">
+          <a href="https://scrumguides.org/scrum-guide.html" target="_blank" rel="noopener noreferrer">The Scrum Guide</a>
+          <span class="source-meta">Ken Schwaber &amp; Jeff Sutherland · 2020</span>
+          <p>Agree on the work, get it done, work out what to change.</p>
+        </li>
+        <li id="source-planning">
+          <a href="https://bear.warrington.ufl.edu/brenner/mar7588/Papers/buehler-et-al-1994.pdf" target="_blank" rel="noopener noreferrer">Exploring the “Planning Fallacy”: Why People Underestimate Their Task Completion Times</a>
+          <span class="source-meta">Roger Buehler, Dale Griffin &amp; Michael Ross · 1994 · PDF · Additional study</span>
+          <p>Start with how long it took last time. Apparently “this time will be different” isn’t much of an estimation method.</p>
+        </li>
+        <li id="source-agile">
+          <a href="https://agilemanifesto.org/principles.html" target="_blank" rel="noopener noreferrer">Principles behind the Agile Manifesto</a>
+          <span class="source-meta">Agile Manifesto authors · 2001</span>
+          <p>Ship something useful, talk to people, adjust. The manifesto is a pretty short read.</p>
+        </li>
+        <li id="source-human-dynamics">
+          <a href="https://thesystemsthinker.com/wp-content/uploads/pdfs/140101pk.pdf" target="_blank" rel="noopener noreferrer">Human Dynamics for the 21st Century</a>
+          <span class="source-meta">Sandra Seagal &amp; David Horne · 2003 · PDF</span>
+          <p>Some people think out loud. Others need a minute. Leave room for both.</p>
+        </li>
+        <li id="source-dale">
+          <a href="https://ocw.metu.edu.tr/file.php/118/dale_audio-visual_20methods_20in_20teaching_1_.pdf" target="_blank" rel="noopener noreferrer">Audio-Visual Methods in Teaching</a>
+          <span class="source-meta">Edgar Dale · Cone of Experience · Book excerpt · PDF</span>
+          <p>Draw it, demo it, or let people try it. Repeating it louder has limits.</p>
+        </li>
+        <li id="source-leadership">
+          <a href="https://www.intechopen.com/chapters/55993" target="_blank" rel="noopener noreferrer">Leadership and Teamwork in Innovation Ecosystems</a>
+          <span class="source-meta">José Miguel Muñoz Pérez &amp; Manuel Irún Molina · 2017</span>
+          <p>People need to be comfortable disagreeing with the boss. Otherwise it’s a very polite echo chamber.</p>
+        </li>
+        <li id="source-collective">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/20929725/" target="_blank" rel="noopener noreferrer">Evidence for a Collective Intelligence Factor in the Performance of Human Groups</a>
+          <span class="source-meta">Anita Williams Woolley and colleagues · 2010 · Additional study</span>
+          <p>Teams that shared the airtime tended to do better. A reminder for me to stop talking occasionally.</p>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="page-footer">
+    <a href="/" class="back-link"><span aria-hidden="true">←</span> Back to home</a>
+    <a href="#main" class="back-link">Back to top <span aria-hidden="true">↑</span></a>
+  </footer>
+</body>
+
+</html>

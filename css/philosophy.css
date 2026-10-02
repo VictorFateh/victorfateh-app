@@ -1,0 +1,171 @@
+.philosophy-page {
+  --ph-muted: #9ca3af;
+  --ph-accent: #818cf8;
+  --ph-highlight: #34d399;
+  --ph-line: #262633;
+  --ph-panel: #121220;
+  --ph-stroke: #6b7280;
+  max-width: 896px;
+}
+
+.philosophy-page a:focus-visible {
+  outline: 2px solid var(--ph-accent);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 24px;
+  z-index: 1;
+  padding: 12px 18px;
+  background: var(--ph-accent);
+  color: #0a0a14;
+}
+
+.skip-link:focus { top: 16px; }
+
+.page-header,
+.page-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  font-size: 13px;
+}
+
+.page-header { padding-top: 40px; }
+.back-link { color: var(--ph-accent); transition: color 150ms; }
+.back-link:hover { color: #a5b4fc; }
+.back-link span { display: inline-block; margin-right: 6px; }
+.philosophy-intro { padding-top: 42px; }
+
+.philosophy-intro h1 {
+  color: #ffffff;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(30px, 4.5vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.intro-copy {
+  max-width: 640px;
+  margin-top: 20px;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.principles { padding-top: 24px; }
+
+.principle {
+  display: grid;
+  grid-template-columns: minmax(0, 1.27fr) minmax(0, 1fr);
+  gap: 44px;
+  align-items: center;
+  padding: 36px 0;
+  scroll-margin-top: 32px;
+}
+
+.principle h2 {
+  color: #eeeeee;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+.principle-copy > p { margin-top: 15px; font-size: 15px; line-height: 1.8; }
+.scope-questions { margin-top: 15px; font-size: 15px; line-height: 1.7; }
+.scope-questions > div + div { margin-top: 8px; }
+.scope-questions dt { display: inline; color: #eeeeee; font-weight: 600; }
+.scope-questions dd { display: inline; }
+
+.principle-copy > .section-sources {
+  margin-top: 18px;
+  color: var(--ph-muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.section-sources a {
+  color: var(--ph-accent);
+  text-decoration: underline;
+  text-decoration-color: rgba(129, 140, 248, 0.4);
+  text-underline-offset: 3px;
+}
+
+.section-sources a:hover { color: #a5b4fc; text-decoration-color: var(--ph-accent); }
+.principle-visual { width: 100%; margin: 0; }
+.principle-visual svg { display: block; width: 100%; height: auto; overflow: visible; }
+.principle-visual figcaption { margin-top: 18px; color: var(--ph-muted); font-size: 12px; line-height: 1.6; text-align: center; }
+.diagram-text { fill: #d1d5db; font-family: inherit; font-size: 14px; }
+.diagram-text.small { font-size: 13px; }
+.diagram-text.bright { fill: #eeeeee; }
+.diagram-fill { fill: var(--ph-panel); stroke: var(--ph-stroke); stroke-width: 1; }
+.diagram-fill-accent { fill: rgba(129, 140, 248, 0.14); stroke: var(--ph-accent); stroke-width: 1; }
+.diagram-line { fill: none; stroke: var(--ph-stroke); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.diagram-node { fill: var(--ph-accent); }
+.highlight-stroke { stroke: var(--ph-highlight); }
+.highlight-text { fill: var(--ph-highlight); }
+.highlight-dot { fill: var(--ph-highlight); }
+.accent-text { fill: var(--ph-accent); }
+.venn-circle { fill: var(--ph-accent); fill-opacity: 0.08; stroke: var(--ph-accent); stroke-width: 1; }
+.scope-overlap { fill: var(--ph-highlight); fill-opacity: 0.65; }
+.scope-marker { fill: #d1fae5; }
+.bias-divider { fill: none; stroke: var(--ph-line); stroke-width: 1; }
+.chart-guide { fill: none; stroke: var(--ph-line); stroke-width: 1; stroke-dasharray: 2 6; }
+.uncertainty-area { fill: var(--ph-accent); fill-opacity: 0.12; }
+.uncertainty-edge { fill: none; stroke: var(--ph-accent); stroke-width: 1.5; }
+.estimate-line { stroke: var(--ph-stroke); stroke-dasharray: 4 5; }
+
+.team-summary { max-width: 680px; padding: 20px 0 24px; }
+.team-summary h2 { color: #eeeeee; font-size: 20px; font-weight: 700; }
+.team-summary ul { margin-top: 18px; padding-left: 20px; list-style: disc; font-size: 15px; line-height: 1.8; }
+.team-summary li + li { margin-top: 8px; }
+.team-summary li::marker { color: var(--ph-muted); }
+
+.sources { margin-top: 20px; padding-top: 32px; border-top: 1px solid var(--ph-line); }
+.sources h2 { color: #eeeeee; font-size: 20px; font-weight: 700; }
+.sources > p { margin-top: 12px; color: var(--ph-muted); font-size: 13px; line-height: 1.8; }
+.source-list { margin-top: 26px; list-style: none; }
+.source-list li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; margin-top: 20px; scroll-margin-top: 32px; }
+.source-list li:target > a { text-decoration-thickness: 2px; text-decoration-color: var(--ph-accent); }
+.source-list a { color: var(--ph-accent); font-size: 14px; line-height: 1.7; text-decoration: underline; text-decoration-color: rgba(129, 140, 248, 0.4); text-underline-offset: 4px; }
+.source-list a:hover { color: #a5b4fc; text-decoration-color: var(--ph-accent); }
+.source-meta { color: var(--ph-muted); font-size: 12px; line-height: 1.7; }
+.source-list p { color: #d1d5db; font-size: 14px; line-height: 1.7; }
+.page-footer { margin-top: 48px; padding: 26px 0 40px; border-top: 1px solid var(--ph-line); }
+
+@media (max-width: 800px) {
+  .page-header { padding-top: 28px; }
+  .philosophy-intro { padding-top: 32px; }
+  .principle { grid-template-columns: 1fr; gap: 28px; padding: 32px 0; }
+  .principle h2 { font-size: 20px; }
+  .principle-visual { max-width: 340px; justify-self: center; }
+  .principle-visual figcaption { margin-top: 16px; }
+  .page-footer { font-size: 12px; gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .philosophy-page a { transition: none; }
+}
+
+@media print {
+  .philosophy-page { max-width: none; }
+  .page-header, .page-footer, .skip-link { display: none; }
+  .philosophy-intro { padding-top: 0; }
+  .philosophy-intro h1 { font-size: 30px; }
+  .principle { grid-template-columns: 1.15fr 1fr; gap: 32px; padding: 24px 0; break-inside: avoid; }
+  .principle h2 { font-size: 22px; }
+  .principle-visual { max-width: 280px; }
+  .principle-visual svg text { fill: #222 !important; }
+  .diagram-fill, .diagram-fill-accent { fill: #eeeeea; stroke: #555; }
+  .diagram-node, .highlight-dot { fill: #555; }
+  .scope-overlap { fill: #555; }
+  .scope-marker { fill: #fff; }
+  .team-summary { break-inside: avoid; }
+  .source-list li { break-inside: avoid; }
+  .source-list a::after { overflow-wrap: anywhere; font-size: 10px; }
+}

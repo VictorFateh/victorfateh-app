@@ -1,6 +1,6 @@
-FOOD
+## FOOD
 Foreign return (Surry hills) 
-Ito (Surry hills, jap/italian) 
+Ito (Surry hills, Japanese/Italian)
 Rollers (Manly, bakery)
 Bangkok Bites (Bondi, solid Thai) 
 Teddy (Potts point, banger) 
@@ -14,7 +14,7 @@ Chester whites (tiny cute Italian)
 Chinese noodle house (CBD, cheap good street food) 
 Emperors puffs (CBD, long wait)
 
-COFFEE
+## COFFEE
 Gypsy Espresso (Potts point)
 Elizabeth Bay Cafe (kings cross) 
 Tuyo (Kings cross)
@@ -23,7 +23,7 @@ Wharf cafe
 Skittle lane (cbd)
 Innit (Surry Hills)
 
-BARS
+## BARS
 RAMBLIN RASCALS
 The clock
 Tio’s
@@ -36,11 +36,11 @@ The winery (surry hills outdoor cocktails)
 Jangling Jacks (chill people, live music sundays) 
 Shady pines (loud underground speakeasy) 
 
-CLUBS
+## CLUBS
 The cliff dive (tiki RnB, crowded and meh)
 Tatler Sydney (underground small dance)
 
-PUBS
+## PUBS
 OLD fitzroy hotel
 MARRICKVILLE hotel
 CRICKETERs ARMS

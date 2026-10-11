@@ -1,5 +1,5 @@
 
-Eat/Drink
+## Eat/Drink
 Choc dee (Palm Cove, thai)
 Kushi Yakitori (Palm Cove, Japanese) 
 Croc xpresso cafe (Daintree, croc burger) 
@@ -11,9 +11,9 @@ O’Donnell Irish Pub (Palm Cove)
 Nunu (Palm Cove, new Australian)
 Espresso & co (Palm Cove, coffee)
 
-Stuff to do
+## Stuff to do
 Hartley’s Creek waterfall (Wangetti)
-Cape tribulations (Daintree coast) 
+Cape Tribulation (Daintree coast)
 Daintree river and go up to Daintree
 Mossman gorge (Port Douglas) 
 Tolga Bat hospital

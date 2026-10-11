@@ -1,5 +1,5 @@
 
-Manila
+## Manila
 Intramuros (walled city) 
 Fort santiago 
 Casa Manila 
@@ -7,12 +7,12 @@ National museums
 Luneta park (next to museums)  
 La Fuk (Newport Filipino) 
 
-Coron
+## Coron
 Mini mountain hike
 Sunburn rooftop bar 
 Gavin’s Kitchen/Bar
 
-El Nido
+## El Nido
 Taraw Cliff (canopy walk)
 Haqqy Life El Nido (Island tours) 
 The Food Truck 
@@ -25,7 +25,7 @@ Calamari Restobar (Karaoke)
 Big bad Thai 
 Friendz hostel 
 
-Boracay
+## Boracay
 Mangrove Walk
 Meze Wrap
 Zugba Grill House 

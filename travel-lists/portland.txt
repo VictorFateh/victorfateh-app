@@ -1,4 +1,4 @@
-Boujie
+## Boujie
 Republica (Fine dining Mexican)
 Urdaneta (Best Spanish)
 Mediterranean exploration company (Crazy good Mediterranean food)
@@ -10,17 +10,17 @@ Berlu (Best)
 Arden (Best American/Fusion)
 Nimblefish (Best sushi and champagne) 
 
-Solid sit downs
+## Solid sit downs
 Scotch lodge (Great cocktails and food)
 Black Star Grill (Pearl District, west African) 
 Franks Noodle House (Pearl District) 
 Montelupo (Best bang for your buck Italian)
-Oma’s hideaway (Portlands current #1 restaurant Thai/fusion laid back)
+Oma’s hideaway (Thai/fusion, laid back)
 Hat Yai (Fried chicken + curry)
 Stammtisch (German food & beer)
 Eem (Insane Thai curry & cocktails)
 
-Cheap/simple bites
+## Cheap/simple bites
 La perlita (Mexican café)
 Miss delta
 South beach fish market (Newport)
@@ -48,9 +48,9 @@ Reel m inn (best fried chicken in dive bar)
 Nongs rice and chicken (worlds best hangover cure)
 Taste tickler (bomb sandwiches)
 
-Bars
+## Bars
 Deadshot bar
-Rum Club (near Ryan)
+Rum Club
 Enso wine bar 
 The Vern
 Roadside attraction
@@ -68,7 +68,7 @@ Angel face
 Tear drop
 Low brow (best chill dive bar)
 
-Coffee/Breakfast
+## Coffee/Breakfast
 Crickets cafe 
 Twisted croissants
 Stepping stone cafe (24th) 

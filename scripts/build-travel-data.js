@@ -16,52 +16,21 @@ const HTML_FILE  = path.join(__dirname, '../travel.html');
 
 // ── Parser ────────────────────────────────────────────────────────────────────
 //
-// Handles two formats found in Victor's notes:
-//
-//   ALL-CAPS headers (Melbourne/Sydney):
-//     FOOD
-//     Mensho Ramen (CBD, Michelin)
-//
-//   Blank-line-preceded headers (Portland/Philippines/etc.):
-//     Boujie
-//     Republica (best Mexican)
-//
-// A line is a section header if:
-//   (a) It is ALL CAPS (with optional spaces/slashes), OR
-//   (b) It is preceded by a blank line AND has no parentheses AND no arrow
-//       AND starts with a capital letter
-//
-// Section names ending in " Shit" (Victor's city markers) are stripped or
-// discarded if they end up with zero items underneath.
-
-function normalizeHeader(raw) {
-  return raw.replace(/\s+shit\s*$/i, '').trim() || raw.trim();
-}
+// Sections use explicit "## Food" headings. Everything else is a spot, even
+// all-caps names or names following blank lines. Notes go in parentheses.
 
 function parseTxt(raw) {
   const rawLines   = raw.split('\n');
   const sections   = [];
   let current      = null;
-  let prevWasBlank = true; // treat start-of-file as "after a blank line"
 
   rawLines.forEach(rawLine => {
     const line = rawLine.trim();
 
-    if (!line) {
-      prevWasBlank = true;
-      return;
-    }
-
-    const isAllCaps  = /^[A-Z][A-Z\/]+$/.test(line); // no spaces — "FOOD" yes, "BAR PLANET" no
-    const hasParens  = /\(/.test(line);
+    if (!line) return;
     const hasArrow   = /—>|→|->/.test(line);
-    const isHeader   = isAllCaps ||
-      (prevWasBlank && !hasParens && !hasArrow && /^[A-Z]/.test(line));
-
-    prevWasBlank = false;
-
-    if (isHeader) {
-      const name = normalizeHeader(line);
+    if (line.startsWith('## ')) {
+      const name = line.slice(3).trim();
       current = { name, items: [] };
       sections.push(current);
       return;
@@ -87,42 +56,48 @@ function parseTxt(raw) {
 
 // ── Read + parse all .txt files ───────────────────────────────────────────────
 
-const data = {};
+function build() {
+  const data = {};
 
-fs.readdirSync(TRAVEL_DIR).forEach(file => {
-  if (!file.endsWith('.txt')) return;
-  const key = path.basename(file, '.txt');
-  const raw = fs.readFileSync(path.join(TRAVEL_DIR, file), 'utf8');
-  data[key] = parseTxt(raw);
-});
+  fs.readdirSync(TRAVEL_DIR).sort().forEach(file => {
+    if (!file.endsWith('.txt')) return;
+    const key = path.basename(file, '.txt');
+    const raw = fs.readFileSync(path.join(TRAVEL_DIR, file), 'utf8');
+    data[key] = parseTxt(raw);
+  });
 
-// ── Inject into travel.html ───────────────────────────────────────────────────
-// Use indexOf + slice instead of regex/replace to avoid $ special-char issues.
+  // ── Inject into travel.html ───────────────────────────────────────────────────
+  // Use indexOf + slice instead of regex/replace to avoid $ special-char issues.
 
-const START_MARKER = '/* TRAVEL_DATA_START */';
-const END_MARKER   = '/* TRAVEL_DATA_END */';
+  const START_MARKER = '/* TRAVEL_DATA_START */';
+  const END_MARKER   = '/* TRAVEL_DATA_END */';
 
-const html     = fs.readFileSync(HTML_FILE, 'utf8');
-const startIdx = html.indexOf(START_MARKER);
-const endIdx   = html.indexOf(END_MARKER);
+  const html     = fs.readFileSync(HTML_FILE, 'utf8');
+  const startIdx = html.indexOf(START_MARKER);
+  const endIdx   = html.indexOf(END_MARKER);
 
-if (startIdx === -1 || endIdx === -1) {
-  console.error('[travel-data] ERROR: TRAVEL_DATA markers not found in travel.html');
-  process.exit(1);
+  if (startIdx === -1 || endIdx === -1) {
+    console.error('[travel-data] ERROR: TRAVEL_DATA markers not found in travel.html');
+    process.exit(1);
+  }
+
+  // An edited note must not be able to end the surrounding script element.
+  const json    = JSON.stringify(data).replace(/</g, '\\u003c');
+  const newHtml = html.slice(0, startIdx + START_MARKER.length)
+    + '\nconst TRAVEL_DATA = ' + json + ';\n'
+    + html.slice(endIdx);
+
+  fs.writeFileSync(HTML_FILE, newHtml);
+
+  const totalSpots    = Object.values(data).reduce((n, secs) =>
+    n + secs.reduce((m, s) => m + s.items.length, 0), 0);
+  const totalSections = Object.values(data).reduce((n, secs) => n + secs.length, 0);
+
+  console.log(
+    `[travel-data] built ${Object.keys(data).length} cities — ` +
+    `${totalSections} sections — ${totalSpots} spots`
+  );
 }
 
-const json    = JSON.stringify(data);
-const newHtml = html.slice(0, startIdx + START_MARKER.length)
-  + '\nconst TRAVEL_DATA = ' + json + ';\n'
-  + html.slice(endIdx);
-
-fs.writeFileSync(HTML_FILE, newHtml);
-
-const totalSpots    = Object.values(data).reduce((n, secs) =>
-  n + secs.reduce((m, s) => m + s.items.length, 0), 0);
-const totalSections = Object.values(data).reduce((n, secs) => n + secs.length, 0);
-
-console.log(
-  `[travel-data] built ${Object.keys(data).length} cities — ` +
-  `${totalSections} sections — ${totalSpots} spots`
-);
+if (require.main === module) build();
+module.exports = { parseTxt };

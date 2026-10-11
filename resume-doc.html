@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,7 +30,7 @@
 
   /* ---------- Columns ---------- */
   .columns { display: flex; width: 100%; position: relative; }
-  .sidebar { width: 65mm; padding: 5.5mm 6mm 6mm 7.5mm; }
+  .sidebar { order: -1; width: 65mm; padding: 5.5mm 6mm 6mm 7.5mm; }
   .main { width: 145mm; padding: 5mm 8mm 4mm 7mm; }
 
   h2 { font-family: 'HK Grotesk', sans-serif; font-weight: 600; font-size: 10pt; letter-spacing: 0.30em; color: #3a3a3a; text-transform: uppercase; }
@@ -91,12 +91,59 @@
   /* ---------- Footer rule ---------- */
   .footer-rule { position: absolute; bottom: 6mm; left: 8mm; right: 8mm; border-top: 0.5pt solid #cfcfcf; }
 
-  /* Screen-only: scale the fixed A4 page to the viewport (iframe) width. Print/WeasyPrint unaffected.
-     html must track the viewport (not the fixed 210mm) so the ResizeObserver sees size changes. */
+  /* Desktop retains the A4 layout. Phones reflow the same content. */
   @media screen {
     html { width: auto; height: auto; overflow: hidden; }
     body { transform-origin: top left; }
+
+    html.mobile-layout { overflow-x: hidden; overflow-y: auto; }
+    .mobile-layout body { width: 100%; height: auto; font-size: 16px; line-height: 1.55; }
+    .mobile-layout .side-bg, .mobile-layout .footer-rule { display: none; }
+    .mobile-layout .header { height: auto; padding: 28px 20px 24px; text-align: left; }
+    .mobile-layout .name { font-size: 28px; line-height: 1.2; letter-spacing: 0.1em; margin: 0; }
+    .mobile-layout .tagline { max-width: none; margin: 16px 0 0; font-size: 16px; line-height: 1.55; }
+    .mobile-layout .columns { display: block; }
+    .mobile-layout .main, .mobile-layout .sidebar { width: 100%; padding: 24px 20px; }
+    .mobile-layout .main { padding-top: 0; }
+    .mobile-layout .sidebar { background: #f5f5f5; }
+    .mobile-layout h2 { font-size: 18px; letter-spacing: 0.15em; line-height: 1.3; }
+    .mobile-layout h2::after { width: 24px; height: 3px; margin-top: 8px; }
+    .mobile-layout .main h2, .mobile-layout .sidebar h2 { margin-bottom: 24px; }
+    .mobile-layout .entry { margin-bottom: 32px; }
+    .mobile-layout .entry-head { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 6px 12px; margin-bottom: 16px; }
+    .mobile-layout .chip { width: 36px; height: 36px; margin: 0; border-radius: 8px; }
+    .mobile-layout .head-text { min-width: 0; }
+    .mobile-layout .title, .mobile-layout .co-name { font-size: 20px; line-height: 1.25; }
+    .mobile-layout .company { font-size: 16px; line-height: 1.4; margin-top: 4px; }
+    .mobile-layout .dates { font-size: 14px; line-height: 1.4; }
+    .mobile-layout .entry-head > .dates { grid-column: 2; }
+    .mobile-layout .role { flex-direction: column; align-items: flex-start; padding-left: 24px; margin: 20px 0 12px; gap: 4px; }
+    .mobile-layout .role-title { font-size: 18px; line-height: 1.35; }
+    .mobile-layout .role-sub { display: block; font-size: 16px; line-height: 1.4; }
+    .mobile-layout .role .dates { margin-left: 0; align-self: auto; }
+    .mobile-layout .role::before { left: 0; top: 8px; width: 9px; height: 9px; margin-top: 0; }
+    .mobile-layout .t-line { left: 4px; top: 12px; bottom: 26px; width: 1px; }
+    .mobile-layout .bullets li { font-size: 16px; line-height: 1.55; margin: 0 0 10px 24px; }
+    .mobile-layout .bullets li::before { left: -16px; color: #767676; }
+    .mobile-layout .side-section { padding-bottom: 24px; margin-bottom: 24px; }
+    .mobile-layout .side-section:last-child { padding-bottom: 0; margin-bottom: 0; }
+    .mobile-layout .contact-row { font-size: 16px; margin-bottom: 12px; overflow-wrap: anywhere; }
+    .mobile-layout .contact-row svg { width: 18px; height: 18px; margin-right: 12px; }
+    .mobile-layout .skill-group { margin-bottom: 24px; }
+    .mobile-layout .skill-group h3 { font-size: 17px; margin-bottom: 12px; }
+    .mobile-layout .sidebar li { font-size: 16px; line-height: 1.55; padding-left: 18px; margin-bottom: 8px; }
+    .mobile-layout .sidebar li::before { left: 2px; }
+    .mobile-layout .tool-row { display: block; margin-bottom: 14px; }
+    .mobile-layout .tool-label { width: auto; font-size: 12px; padding: 0; margin-bottom: 4px; color: #626262; }
+    .mobile-layout .tool-val { font-size: 16px; line-height: 1.55; }
+    .mobile-layout .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .mobile-layout .pills span { font-size: 14px; line-height: 1.4; padding: 6px 10px; margin: 0; }
+    .mobile-layout .edu-school { font-size: 16px; margin-bottom: 6px; }
+    .mobile-layout .edu-degree { font-size: 18px; line-height: 1.4; }
+    .mobile-layout a { text-decoration: underline; text-underline-offset: 3px; }
+    .mobile-layout a:focus-visible { outline: 2px solid #3730a3; outline-offset: 3px; }
   }
+  @media print { body { transform: none !important; } }
 </style>
 </head>
 <body>
@@ -104,12 +151,128 @@
 <div class="side-bg"></div>
 
 <div class="header">
-  <div class="name">VICTOR FATEH</div>
+  <h1 class="name">VICTOR FATEH</h1>
   <div class="tagline">Engineer turned PM with 8+ years shipping at scale in regulated industries, across consumer mobile and backend SaaS, lately AI. I lead multi-team portfolios, sweat the details, and turn complexity into focused bets.</div>
 </div>
 
 <div class="columns">
 
+  <!-- ================= MAIN ================= -->
+  <div class="main">
+    <h2>Experience</h2>
+
+    <!-- Blinq: two roles, one tenure -->
+    <div class="entry">
+      <div class="entry-head">
+        <img class="chip" alt="" src="assets/blinq.png">
+        <div class="head-text">
+          <div class="co-name">Blinq</div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="t-line"></div>
+        <div class="role current">
+          <div class="role-title">Lead Product Manager</div>
+          <div class="dates">2026 &ndash; Present</div>
+        </div>
+        <ul class="bullets">
+          <li>Group lead on the Business, Integrations &amp; Workspaces teams: cross-team prioritization, hiring &amp; delivery</li>
+          <li>Own product strategy across all of Blinq: roadmap, pricing &amp; packaging for the full B2B portfolio</li>
+          <li>Increased ACV by <b>5X</b> with the launch of new product tiers</li>
+          <li>Increased user activation from <b>22% to 40%</b> with better onboarding &amp; nurturing</li>
+        </ul>
+        <div class="role past">
+          <div class="role-title">Sr. Product Manager</div>
+          <div class="dates">2025 &ndash; 2026</div>
+        </div>
+      </div>
+      <ul class="bullets">
+        <li><b>40+ experiments</b> across activation, retention &amp; churn reduction</li>
+        <li>Launched Blinq Campaigns, Lead Capture, Workspace tags &amp; the integrations ecosystem in under 3 months; the highest feature velocity in Blinq's history</li>
+        <li>Shipped AI Insights and co-built Blinq's MCP server with the team, opening the product to customers' AI workflows</li>
+        <li>Revived engagement with sales &amp; users via weekly show-tells, voice-of-customer sessions &amp; lifecycle marketing</li>
+        <li>Reached feature parity with top 2 competitors in my first 6 months, reducing enterprise sales loss by <b>~35%</b></li>
+      </ul>
+    </div>
+
+    <!-- Kanopi -->
+    <div class="entry">
+      <div class="entry-head">
+        <img class="chip" alt="" src="assets/kanopi.png">
+        <div class="head-text">
+          <div class="title">Sr. Product Manager</div>
+          <div class="company">Kanopi Cover</div>
+        </div>
+        <div class="dates">2023 &ndash; 2025</div>
+      </div>
+      <ul class="bullets">
+        <li>Transitioned Kanopi from a service org to a product-driven one</li>
+        <li>Drove the product roadmap to target key enterprise clients, going from <b>0 customers to 4</b> in six months, each with ARR of <b>$150K+</b></li>
+        <li>Identified and eliminated redundant infrastructure, saving the company <b>A$100,000 annually</b> in hosting &amp; logging expenses</li>
+        <li>Re-defined roadmap to align with GTM, team capacity &amp; vision</li>
+        <li>Worked closely with executive, marketing, eng &amp; design teams to align on customer outcomes</li>
+        <li>Engaged with prospects &amp; customers continuously to identify key unmet needs and drive user growth</li>
+      </ul>
+    </div>
+
+    <!-- Socotra: two roles, one tenure -->
+    <div class="entry">
+      <div class="entry-head">
+        <img class="chip" alt="" src="assets/socotra.png">
+        <div class="head-text">
+          <div class="co-name">Socotra</div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="t-line"></div>
+        <div class="role navy">
+          <div class="role-title">Product Lead <span class="role-sub">&middot; App Marketplace</span></div>
+          <div class="dates">2020 &ndash; 2023</div>
+        </div>
+        <ul class="bullets">
+          <li>Launched the insurance industry's first no-code ecosystem: from ideation to delivery to scale</li>
+          <li>Marketplace accounted for <b>40% of Series C funding</b>, $20M of the $50M total (USD)</li>
+          <li>Leveraged an iterative product plan to deliver critical features just-in-time, leading to an average of <b>+20% in upsell</b> per customer</li>
+          <li>Hired &amp; managed cross-functional teams in the US &amp; Australia</li>
+          <li>Worked with internal stakeholders: exec, partnerships, marketing, sales &amp; support teams</li>
+          <li>Engaged closely with customers to understand their needs and incorporate it into the product</li>
+        </ul>
+        <div class="role past">
+          <div class="role-title">Sr. Solutions Engineer <span class="role-sub">&middot; Core Platform</span></div>
+          <div class="dates">2019 &ndash; 2020</div>
+        </div>
+      </div>
+      <ul class="bullets">
+        <li>The first solutions engineer hire &amp; <b>employee #9</b> at Socotra</li>
+        <li>Technical advisor, subject-matter expert and problem solver for enterprise customers</li>
+        <li>Defined project architecture best practices with enterprise engineering teams</li>
+        <li>Planning, discovery, implementation, risk mitigation and launch</li>
+        <li>Worked with cross-functional teams to define product integrations, training &amp; implementations</li>
+        <li>Pre-sales support, post-sales customer success and solution design</li>
+      </ul>
+    </div>
+
+    <!-- Stanford -->
+    <div class="entry" style="margin-bottom:0">
+      <div class="entry-head">
+        <img class="chip" alt="" src="assets/stanford.png" style="border-radius:0">
+        <div class="head-text">
+          <div class="title">Software Engineer</div>
+          <div class="company">Stanford School of Medicine</div>
+        </div>
+        <div class="dates">2018 &ndash; 2019</div>
+      </div>
+      <ul class="bullets">
+        <li>Turned a <b>$10M microscope</b> into a <b>$20 disposable</b> one</li>
+        <li>Developed radioluminescence microscopy software for med-teams</li>
+        <li>Implemented the camera module &amp; imagery integration, optimized for embeddable hardware</li>
+        <li>Defined open-source strategy and introduced public documentation</li>
+      </ul>
+    </div>
+
+  </div>
   <!-- ================= SIDEBAR ================= -->
   <div class="sidebar">
 
@@ -181,133 +344,27 @@
 
   </div>
 
-  <!-- ================= MAIN ================= -->
-  <div class="main">
-    <h2>Experience</h2>
-
-    <!-- Blinq: two roles, one tenure -->
-    <div class="entry">
-      <div class="entry-head">
-        <img class="chip" src="assets/blinq.png">
-        <div class="head-text">
-          <div class="co-name">Blinq</div>
-        </div>
-      </div>
-
-      <div class="timeline">
-        <div class="t-line"></div>
-        <div class="role current">
-          <div class="role-title">Lead Product Manager</div>
-          <div class="dates">2026 &ndash; Present</div>
-        </div>
-        <ul class="bullets">
-          <li>Group lead on the Business, Integrations &amp; Workspaces teams: cross-team prioritization, hiring &amp; delivery</li>
-          <li>Own product strategy across all of Blinq: roadmap, pricing &amp; packaging for the full B2B portfolio</li>
-          <li>Increased ACV by <b>5X</b> with the launch of new product tiers</li>
-          <li>Increased user activation from <b>22% to 40%</b> with better onboarding &amp; nurturing</li>
-        </ul>
-        <div class="role past">
-          <div class="role-title">Sr. Product Manager</div>
-          <div class="dates">2025 &ndash; 2026</div>
-        </div>
-      </div>
-      <ul class="bullets">
-        <li><b>40+ experiments</b> across activation, retention &amp; churn reduction</li>
-        <li>Launched Blinq Campaigns, Lead Capture, Workspace tags &amp; the integrations ecosystem in under 3 months; the highest feature velocity in Blinq's history</li>
-        <li>Shipped AI Insights and co-built Blinq's MCP server with the team, opening the product to customers' AI workflows</li>
-        <li>Revived engagement with sales &amp; users via weekly show-tells, voice-of-customer sessions &amp; lifecycle marketing</li>
-        <li>Reached feature parity with top 2 competitors in my first 6 months, reducing enterprise sales loss by <b>~35%</b></li>
-      </ul>
-    </div>
-
-    <!-- Kanopi -->
-    <div class="entry">
-      <div class="entry-head">
-        <img class="chip" src="assets/kanopi.png">
-        <div class="head-text">
-          <div class="title">Sr. Product Manager</div>
-          <div class="company">Kanopi Cover</div>
-        </div>
-        <div class="dates">2023 &ndash; 2025</div>
-      </div>
-      <ul class="bullets">
-        <li>Transitioned Kanopi from a service org to a product-driven one</li>
-        <li>Drove the product roadmap to target key enterprise clients, going from <b>0 customers to 4</b> in six months, each with ARR of <b>$150K+</b></li>
-        <li>Identified and eliminated redundant infrastructure, saving the company <b>A$100,000 annually</b> in hosting &amp; logging expenses</li>
-        <li>Re-defined roadmap to align with GTM, team capacity &amp; vision</li>
-        <li>Worked closely with executive, marketing, eng &amp; design teams to align on customer outcomes</li>
-        <li>Engaged with prospects &amp; customers continuously to identify key unmet needs and drive user growth</li>
-      </ul>
-    </div>
-
-    <!-- Socotra: two roles, one tenure -->
-    <div class="entry">
-      <div class="entry-head">
-        <img class="chip" src="assets/socotra.png">
-        <div class="head-text">
-          <div class="co-name">Socotra</div>
-        </div>
-      </div>
-
-      <div class="timeline">
-        <div class="t-line"></div>
-        <div class="role navy">
-          <div class="role-title">Product Lead <span class="role-sub">&middot; App Marketplace</span></div>
-          <div class="dates">2020 &ndash; 2023</div>
-        </div>
-        <ul class="bullets">
-          <li>Launched the insurance industry's first no-code ecosystem: from ideation to delivery to scale</li>
-          <li>Marketplace accounted for <b>40% of Series C funding</b>, $20M of the $50M total (USD)</li>
-          <li>Leveraged an iterative product plan to deliver critical features just-in-time, leading to an average of <b>+20% in upsell</b> per customer</li>
-          <li>Hired &amp; managed cross-functional teams in the US &amp; Australia</li>
-          <li>Worked with internal stakeholders: exec, partnerships, marketing, sales &amp; support teams</li>
-          <li>Engaged closely with customers to understand their needs and incorporate it into the product</li>
-        </ul>
-        <div class="role past">
-          <div class="role-title">Sr. Solutions Engineer <span class="role-sub">&middot; Core Platform</span></div>
-          <div class="dates">2019 &ndash; 2020</div>
-        </div>
-      </div>
-      <ul class="bullets">
-        <li>The first solutions engineer hire &amp; <b>employee #9</b> at Socotra</li>
-        <li>Technical advisor, subject-matter expert and problem solver for enterprise customers</li>
-        <li>Defined project architecture best practices with enterprise engineering teams</li>
-        <li>Planning, discovery, implementation, risk mitigation and launch</li>
-        <li>Worked with cross-functional teams to define product integrations, training &amp; implementations</li>
-        <li>Pre-sales support, post-sales customer success and solution design</li>
-      </ul>
-    </div>
-
-    <!-- Stanford -->
-    <div class="entry" style="margin-bottom:0">
-      <div class="entry-head">
-        <img class="chip" src="assets/stanford.png" style="border-radius:0">
-        <div class="head-text">
-          <div class="title">Software Engineer</div>
-          <div class="company">Stanford School of Medicine</div>
-        </div>
-        <div class="dates">2018 &ndash; 2019</div>
-      </div>
-      <ul class="bullets">
-        <li>Turned a <b>$10M microscope</b> into a <b>$20 disposable</b> one</li>
-        <li>Developed radioluminescence microscopy software for med-teams</li>
-        <li>Implemented the camera module &amp; imagery integration, optimized for embeddable hardware</li>
-        <li>Defined open-source strategy and introduced public documentation</li>
-      </ul>
-    </div>
-
-  </div>
 </div>
 
 <div class="footer-rule"></div>
 
 <script>
   (function () {
+    // The iframe is narrower than its parent; use the page breakpoint for both.
+    const viewport = window.frameElement ? window.parent : window;
+    const mobile = viewport.matchMedia('(max-width: 640px)');
     function fit() {
-      document.body.style.transform =
+      document.documentElement.classList.toggle('mobile-layout', mobile.matches);
+      document.body.style.transform = mobile.matches ? '' :
         'scale(' + document.documentElement.clientWidth / document.body.offsetWidth + ')';
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'resume-height', height: document.body.getBoundingClientRect().height }, window.location.origin);
+      }
     }
-    new ResizeObserver(fit).observe(document.documentElement);
+    const observer = new ResizeObserver(fit);
+    observer.observe(document.documentElement);
+    observer.observe(document.body);
+    mobile.addEventListener('change', fit);
     window.addEventListener('resize', fit);
     fit();
   })();

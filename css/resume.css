@@ -59,3 +59,43 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.resume-toolbar { display: contents; }
+.resume-download { display: none; }
+
+@media screen and (max-width: 640px) {
+  .resume-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .resume-toolbar .accent-link { margin-bottom: 0; }
+
+  .resume-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    border: 1px solid #818cf8;
+    border-radius: 8px;
+    color: #e0e7ff;
+    background: #22223b;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .resume-download:hover { background: #30304d; }
+  .resume-download:focus-visible { outline: 2px solid #c7d2fe; outline-offset: 3px; }
+  .resume-download-footer { display: none; }
+
+  .resume-wrap {
+    height: var(--resume-height, 100vh);
+    padding-top: 0;
+    background: #fff;
+    will-change: auto;
+  }
+}

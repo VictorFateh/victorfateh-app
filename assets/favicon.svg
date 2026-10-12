@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Victor Fateh</title>
+  <rect width="64" height="64" rx="14" fill="#0a0a14"/>
+  <g fill="#f5f5f5" transform="translate(-1.5 0)">
+    <path d="M10 16h7.5L23 38.4 28.5 16H36l-9.2 32h-7.6Z"/>
+    <path d="M39 16h18v6.5H46.2v6.1H56v6.5h-9.8V48H39Z"/>
+  </g>
+</svg>

@@ -10,12 +10,18 @@
     "start": "npm run dev",
     "test": "node --test tests/*.test.mjs"
   },
-  "staticFiles": {
-    "staticPath": "robots.txt"
-  },
+  "staticFiles": [
+    {
+      "staticPath": "robots.txt"
+    },
+    {
+      "staticPath": "mstile-150x150.png"
+    }
+  ],
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.16.4",
     "@parcel/packager-xml": "^2.16.4",
+    "@parcel/plugin": "^2.16.4",
     "@parcel/transformer-jsonld": "^2.16.4",
     "@parcel/transformer-webmanifest": "^2.16.4",
     "@parcel/transformer-xml": "^2.16.4",

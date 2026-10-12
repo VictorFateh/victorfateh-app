@@ -21,9 +21,25 @@ automatically rebuilds and refreshes the page when HTML, CSS or JavaScript chang
 Development output goes into `.cache/dev/`, so production builds can run without
 overwriting the local preview.
 
-The Parcel static-files reporter copies `robots.txt` into both development and
-production output after each build. Restart the dev server after editing
-`robots.txt` itself, since the reporter does not watch static files for changes.
+The Parcel static-files reporter copies `robots.txt` and the Windows tile icon into
+both development and production output after each build. Restart the dev server
+after editing these files, since the reporter does not watch static files for changes.
+
+## Site icons
+
+`assets/favicon.svg` is the editable vector source for the midnight-and-white VF
+mark. The glyphs are paths, so exports do not depend on an installed font. Keep the
+letters inside a circular crop and check readability at 16px and 32px.
+
+- `favicon.ico`: a real ICO containing 16px, 32px and 48px images.
+- `icon.png` and `icon-512.png`: 192px and 512px rounded-square PNG exports.
+- `apple-touch-icon.png`: 180px with a solid square background; iOS applies its own mask.
+- `mstile-150x150.png`: 150px with a solid square background for `browserconfig.xml`.
+
+`scripts/parcel-namer-icons.cjs` preserves the public icon filenames while Parcel
+continues to hash other assets for caching. Keep the icon URLs stable for search
+crawlers. Export icons again after editing the SVG; do not upscale the old bitmap
+or rename a PNG to `.ico`. Google may take days or weeks to refresh its cached icon.
 
 ## Search metadata and hosting
 

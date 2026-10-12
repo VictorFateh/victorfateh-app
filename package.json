@@ -6,9 +6,12 @@
     "prebuild": "node scripts/build-travel-data.js",
     "build": "parcel build ./*.html ./*.xml",
     "predev": "node scripts/build-travel-data.js",
-    "dev": "parcel ./*.html --open",
+    "dev": "parcel ./*.html ./*.xml --host 127.0.0.1 --port 4173 --dist-dir .cache/dev",
     "start": "npm run dev",
     "test": "node --test tests/*.test.mjs"
+  },
+  "staticFiles": {
+    "staticPath": "robots.txt"
   },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.16.4",

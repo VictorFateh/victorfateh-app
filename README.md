@@ -16,6 +16,15 @@ Step 2
 npm start
 ```
 
+Open http://127.0.0.1:4173/ and leave the server running while editing. Parcel
+automatically rebuilds and refreshes the page when HTML, CSS or JavaScript changes.
+Development output goes into `.cache/dev/`, so production builds can run without
+overwriting the local preview.
+
+The Parcel static-files reporter copies `robots.txt` into both development and
+production output after each build. Restart the dev server after editing
+`robots.txt` itself, since the reporter does not watch static files for changes.
+
 ## Travel guides
 
 Edit `travel-lists/*.txt`. Use `## Food` (or another category/destination) for

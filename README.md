@@ -25,6 +25,23 @@ The Parcel static-files reporter copies `robots.txt` into both development and
 production output after each build. Restart the dev server after editing
 `robots.txt` itself, since the reporter does not watch static files for changes.
 
+## Search metadata and hosting
+
+Netlify runs `npm run build` and publishes `dist/`, as configured in `netlify.toml`.
+The preferred public URLs are `/`, `/resume`, `/philosophy` and `/travel` on
+`https://www.victorfateh.com`. Keep navigation, canonical links, Open Graph URLs
+and `sitemap.xml` consistent. The `.html` URLs remain available; the embedded
+résumé document also points to `/resume` as its canonical page.
+
+The homepage contains `WebSite`, `ProfilePage` and `Person` structured data.
+Update it alongside the visible work history and search description if the role,
+employer or profile links change. Set sitemap `lastmod` dates to actual significant
+page changes, rather than the date of every build.
+
+The Parcel preview serves page content but does not emulate Netlify redirects or
+headers. Verify changes to those rules on Netlify. Google Search Console ownership
+and indexing status have not yet been confirmed.
+
 ## Travel guides
 
 Edit `travel-lists/*.txt`. Use `## Food` (or another category/destination) for

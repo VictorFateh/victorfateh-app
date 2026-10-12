@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="css/overwrites.css">
   <link rel="stylesheet" href="css/travel.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css">
   <meta name="theme-color" content="#0a0a14">
 </head>
 
@@ -35,7 +37,15 @@
     <p class="mt-4 text-lg leading-relaxed text-gray-400">
       I sometimes note down things I’ve done.
     </p>
-    <p class="travel-updated">Last edited <time datetime="2026-10-11">11 October 2026</time>.</p>
+
+    <div id="map-toolbar" class="travel-map-toolbar" hidden>
+      <div class="travel-map-actions">
+        <button id="map-reset" type="button" hidden>All cities</button>
+        <button id="map-fit" type="button" hidden>Show all pins</button>
+        <button id="map-guide-toggle" type="button" aria-controls="city-panel" aria-expanded="false" hidden>Show list</button>
+      </div>
+    </div>
+    <div id="map-filters" role="group" aria-label="Filter places on the map"></div>
 
     <div id="map-wrap">
       <div id="travel-map" role="region" aria-label="Travel map. Use arrow keys to pan and plus or minus to zoom."></div>
@@ -57,7 +67,7 @@
             <span id="city-panel-status-pill"></span>
           </div>
         </div>
-        <button id="city-panel-close" aria-label="Close panel">&#x2715;</button>
+        <button id="city-panel-close" aria-label="Hide list and explore map">&#x2715;</button>
       </div>
       <div id="panel-search-wrap">
         <svg class="panel-search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -74,14 +84,24 @@
   </div>
     </div>
     <p class="mt-3 text-xs text-gray-400">
-      Map data &copy; <a href="https://www.openstreetmap.org/copyright" class="accent-link" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>
+      &copy; <a href="https://www.openstreetmap.org/copyright" class="accent-link" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>
+      &middot; &copy; <a href="https://openmaptiles.org/" class="accent-link" target="_blank" rel="noopener noreferrer">OpenMapTiles</a>
+      &middot; <a href="map-styles/LICENSE.txt" class="accent-link" target="_blank" rel="noopener noreferrer">Map style</a>
     </p>
 
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.3/leaflet-maplibre-gl.js"></script>
   <script type="module">
-    import { CITIES, escapeHTML, highlight, filterSections, mapsURL } from './scripts/travel-guide.mjs';
+    import { CITIES, escapeHTML, highlight, mapsURL } from './scripts/travel-guide.mjs';
+    import { MAP_CATEGORIES, collectSpots, matchingSpots, spotKey } from './scripts/travel-map-data.mjs';
+    import { createVenueLayer, mapIcon } from './scripts/travel-map.mjs';
+    import { addTravelBasemap } from './scripts/travel-basemap.mjs';
+    import darkStyle from './map-styles/travel-dark.json';
+    import locationData from './travel-lists/locations.json';
 
     /* TRAVEL_DATA_START */
 const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","note":"Teneriffe, Italian","isRoute":false},{"name":"Rogue Bistro","note":"Teneriffe","isRoute":false},{"name":"Agnes","note":"Valley","isRoute":false},{"name":"Restaurant Dan Arnold","note":"Valley, fine dining","isRoute":false},{"name":"Yamas Greek + Drink","note":"West End, Greek","isRoute":false},{"name":"Sono","note":"Japanese banger","isRoute":false}]},{"name":"Bars","items":[{"name":"Netherworld","note":"Valley, arcade bar","isRoute":false},{"name":"The Junk Bar","note":"New Farm","isRoute":false}]},{"name":"Break/Coffee","items":[{"name":"El Cafe","note":"Teneriffe, supposed to be good","isRoute":false},{"name":"New Farm Deli","note":"New Farm","isRoute":false}]}],"cairns":[{"name":"Eat/Drink","items":[{"name":"Choc dee","note":"Palm Cove, thai","isRoute":false},{"name":"Kushi Yakitori","note":"Palm Cove, Japanese","isRoute":false},{"name":"Croc xpresso cafe","note":"Daintree, croc burger","isRoute":false},{"name":"Yaya’s","note":"Cairns, Greek","isRoute":false},{"name":"27 Degrees","note":"Palm Cove, coffee","isRoute":false},{"name":"Ganbaranba","note":"Cairns, ramen","isRoute":false},{"name":"Jaques coffee plantation","note":"tablelands","isRoute":false},{"name":"O’Donnell Irish Pub","note":"Palm Cove","isRoute":false},{"name":"Nunu","note":"Palm Cove, new Australian","isRoute":false},{"name":"Espresso & co","note":"Palm Cove, coffee","isRoute":false}]},{"name":"Stuff to do","items":[{"name":"Hartley’s Creek waterfall","note":"Wangetti","isRoute":false},{"name":"Cape Tribulation","note":"Daintree coast","isRoute":false},{"name":"Daintree river and go up to Daintree","note":"","isRoute":false},{"name":"Mossman gorge","note":"Port Douglas","isRoute":false},{"name":"Tolga Bat hospital","note":"","isRoute":false},{"name":"Zoom Helicopter tour","note":"","isRoute":false},{"name":"Palm Cove water sports","note":"kayaks","isRoute":false}]}],"melbourne":[{"name":"PLACES","items":[{"name":"Torquay","note":"","isRoute":false},{"name":"Ballarat gold mines","note":"","isRoute":false},{"name":"Sea Life","note":"CBD, Aquarium","isRoute":false},{"name":"Grampians national park","note":"","isRoute":false},{"name":"The Lume","note":"CBD","isRoute":false},{"name":"National Gallery NGV","note":"Next to botanical","isRoute":false},{"name":"Healesville Sanctuary","note":"","isRoute":false},{"name":"Apollo Bay","note":"","isRoute":false},{"name":"Bakery scallop pie","note":"","isRoute":false},{"name":"Fisherman’s co-op","note":"","isRoute":false},{"name":"Maits rest","note":"rainforest walk","isRoute":false},{"name":"Mind games","note":"CBD, ie guardian games","isRoute":false},{"name":"State Library","note":"CBD","isRoute":false},{"name":"Comma","note":"massage spa thing","isRoute":false},{"name":"Moonlit sanctuary","note":"cute and small","isRoute":false},{"name":"Strike bowling","note":"CBD, bowling","isRoute":false},{"name":"Mt Buffalo","note":"easy drive up","isRoute":false},{"name":"Rye beach","note":"awesome, not too full","isRoute":false},{"name":"Rye ocean beach","note":"banger big waves","isRoute":false},{"name":"Yarra ranges","note":"","isRoute":false},{"name":"Mount Donna Buang tower","note":"","isRoute":false},{"name":"Keppel Lookout","note":"","isRoute":false},{"name":"Noojee bridge","note":"","isRoute":false},{"name":"Toorongo falls","note":"","isRoute":false},{"name":"Frenchman’s Creek","note":"Camping","isRoute":false},{"name":"Phillip island","note":"","isRoute":false},{"name":"Churchill island","note":"","isRoute":false},{"name":"Koala sanctuary","note":"","isRoute":false},{"name":"Penguin parade","note":"","isRoute":false},{"name":"San remo fisherman’s coop","note":"fish n chips","isRoute":false},{"name":"Tides of Rhyll","note":"fish n chips","isRoute":false},{"name":"Cape woolamai","note":"banger views","isRoute":false},{"name":"Vietnam museum","note":"","isRoute":false},{"name":"Victoria market","note":"CBD","isRoute":false},{"name":"Werribee Zoo","note":"meh far and zoo ish","isRoute":false},{"name":"Drive the coast to Lorne —> Geelong —> Ballarat —> home","note":"","isRoute":true},{"name":"Boulder project","note":"Prahran","isRoute":false},{"name":"Prahran market","note":"Prahran","isRoute":false},{"name":"South Melbourne market","note":"South Mel","isRoute":false},{"name":"Nimmons bridge","note":"Newton, little walk","isRoute":false},{"name":"Rosebud pier","note":"","isRoute":false},{"name":"Half moon bay / sandringham","note":"","isRoute":false},{"name":"Ballarat wildlife park","note":"small fun pit stop","isRoute":false},{"name":"Balm & Palm massage","note":"Abbotsford","isRoute":false},{"name":"Shrine of remembrance","note":"Botanic","isRoute":false},{"name":"Amy Thai massage","note":"South Melbourne","isRoute":false},{"name":"Victims of Ink","note":"South Yarra, tattoo","isRoute":false},{"name":"Heretic tattoos","note":"Fitzroy","isRoute":false},{"name":"Botanical Gardens","note":"central gardens cool for sunset","isRoute":false},{"name":"Sidney Myer Music bowl","note":"","isRoute":false},{"name":"St Kilda pier","note":"penguin, beach","isRoute":false},{"name":"Fitzroy Gardens","note":"Fitzroy","isRoute":false},{"name":"NGV Australia","note":"Fed Square","isRoute":false},{"name":"ACMI","note":"Federation square","isRoute":false},{"name":"Cinema nova","note":"Carlton, old cinema","isRoute":false},{"name":"Carlton gardens","note":"CBD, park, imax, museum","isRoute":false}]},{"name":"ALLEYS","items":[{"name":"Tattersalls Ln","note":"CBD","isRoute":false},{"name":"Hosier Lane","note":"CBD, graffiti","isRoute":false},{"name":"The Causeway","note":"CBD","isRoute":false},{"name":"Degraves Street","note":"CBD","isRoute":false}]},{"name":"FOOD","items":[{"name":"Beef ricenoodles bar","note":"CBD","isRoute":false},{"name":"LUNE","note":"Fitzroy, croissants, crazy busy","isRoute":false},{"name":"Capitano","note":"Carlton, Italian","isRoute":false},{"name":"We live for hotpot","note":"CBD","isRoute":false},{"name":"FARS food","note":"CBD, persian","isRoute":false},{"name":"Soi 38","note":"CBD, thai, long line","isRoute":false},{"name":"Tamura Sake Bar","note":"Fitzroy","isRoute":false},{"name":"Supper Inn","note":"CBD, late night Chinese","isRoute":false},{"name":"Rumi","note":"Brunswick, Persian","isRoute":false},{"name":"Ms Frankie","note":"Cremorne, Italian","isRoute":false},{"name":"Achilles Greek","note":"Fitzroy","isRoute":false},{"name":"Keith’s pies","note":"Richmond, meat pie","isRoute":false},{"name":"Vinh long","note":"Fitzroy, viet","isRoute":false},{"name":"Kantan","note":"Fitzroy, Malaysian","isRoute":false},{"name":"Easeys","note":"Fitzroy, best burgers apparently","isRoute":false},{"name":"Mr. Ryu","note":"south yarra, Japanese","isRoute":false},{"name":"Mensho Ramen","note":"CBD, Michelin-recommended menu","isRoute":false},{"name":"Bincho Boss","note":"CBD, lobster udon","isRoute":false},{"name":"Magic Momo","note":"CBD, Nepalese","isRoute":false},{"name":"DonDon","note":"cbd, cheap Japanese","isRoute":false},{"name":"Tipo 00","note":"cbd, great Italian","isRoute":false},{"name":"Gopals","note":"cbd, veg buffet","isRoute":false},{"name":"Bistro Bagou","note":"st Kilda, Nice French","isRoute":false},{"name":"Fitz Curry Cafe","note":"Fitzroy, Indian","isRoute":false},{"name":"Mukka","note":"Fitzroy, Indian","isRoute":false},{"name":"Horn please","note":"Fitzroy north, Indian, comfort","isRoute":false},{"name":"Tonka","note":"CBD, Indian, high end","isRoute":false},{"name":"Cone heads","note":"st kilda","isRoute":false},{"name":"Chook bar","note":"st kilda","isRoute":false},{"name":"Henrietta","note":"Prahran, high end middle eastern","isRoute":false},{"name":"Cookie","note":"CBD, thai with private booths","isRoute":false},{"name":"Roule Galette","note":"CBD, crêpe","isRoute":false},{"name":"Pincho Disco","note":"","isRoute":false},{"name":"Shujinko","note":"CBD, Japanese","isRoute":false},{"name":"Xinjiang Lamian","note":"CBD, Uyghur, dumplings","isRoute":false},{"name":"Hofbrau house","note":"CBD, German","isRoute":false},{"name":"Nora Thai","note":"south yarra","isRoute":false},{"name":"Pearl Diver","note":"CBD","isRoute":false},{"name":"Rein","note":"","isRoute":false},{"name":"Vex","note":"Northcote","isRoute":false},{"name":"Buza","note":"CBD, Korean fried chicken","isRoute":false},{"name":"HER","note":"cbd, downstairs food, up bar","isRoute":false},{"name":"Khao Soi","note":"CBD, bomb","isRoute":false},{"name":"Hanbaobao","note":"CBD, fried chicken","isRoute":false},{"name":"Movida Aqui","note":"CBD, Spanish bomb","isRoute":false},{"name":"Studio Amaro","note":"Prahran, Italian, good","isRoute":false},{"name":"Hopper","note":"Prahran, Sri Lankan","isRoute":false},{"name":"Momo","note":"CBD, Népal","isRoute":false},{"name":"Lah Bros","note":"Windsor, Nepalese","isRoute":false},{"name":"Yellow bird","note":"Prahran tacos","isRoute":false},{"name":"Trang","note":"Prahran, banger bánh mì","isRoute":false},{"name":"Mai Jia","note":"South Yarra, Malaysian","isRoute":false},{"name":"Oporto","note":"Grilled chicken fast food","isRoute":false},{"name":"Kung Fu burger","note":"Prahran","isRoute":false},{"name":"Maker & Monger","note":"Prahran market, toasties","isRoute":false},{"name":"Kirk's Wine Bar","note":"CBD, good food","isRoute":false},{"name":"Buba Local Shuk","note":"St kilda, Israeli","isRoute":false},{"name":"Tropicana Juice Bar","note":"CBD","isRoute":false},{"name":"Lulu’s Char Koay Teow","note":"CBD, Malay, meh","isRoute":false},{"name":"Shandong Mama Mini","note":"CBD, degraves st, dumplings","isRoute":false},{"name":"Marbl","note":"Prahran, steak","isRoute":false},{"name":"PappaRich","note":"CBD Malaysian","isRoute":false},{"name":"Dodee","note":"CBD, Thai, underground good","isRoute":false},{"name":"Lamb on Brunswick","note":"Fitzroy, late night shitfaced greek","isRoute":false},{"name":"Ippudo","note":"CBD, ramen","isRoute":false},{"name":"Paiks BBQ","note":"CBD qbb","isRoute":false},{"name":"Hectors Deli","note":"Fitzroy","isRoute":false},{"name":"Sals authentic pizza","note":"CBD quick joint","isRoute":false},{"name":"Bunnings fucking sausage","note":"slams","isRoute":false},{"name":"Drizzle Windsor","note":"Windsor, falafel","isRoute":false},{"name":"Borek & Gozleme","note":"Queen Vic","isRoute":false},{"name":"Thai Town","note":"CBD QV","isRoute":false},{"name":"Ichi Ni Nana","note":"Fitzroy, Japanese, ok","isRoute":false},{"name":"300 grams","note":"Prahran burgers","isRoute":false},{"name":"Empress of china","note":"CBD","isRoute":false},{"name":"Calia","note":"CBD, Japanese, pricy meh","isRoute":false},{"name":"Nicos sandwich deli","note":"Fitzroy","isRoute":false},{"name":"Peko peko","note":"Thai chicken, south melb","isRoute":false},{"name":"Kebabalab","note":"st Kilda","isRoute":false},{"name":"Toolshed bar/bistro","note":"Noojee","isRoute":false},{"name":"Blu oyster co","note":"Fitzroy st","isRoute":false},{"name":"Hochi Mama","note":"CBD, Fusion, pretty bomb","isRoute":false},{"name":"Claypots","note":"south melb market, seafood","isRoute":false},{"name":"Fonda Mexican","note":"Smith st","isRoute":false},{"name":"Rice paper scissors","note":"Fitzroy, Asian","isRoute":false},{"name":"Keday satay","note":"south melb, indo","isRoute":false},{"name":"Musashi","note":"CBD, ramen","isRoute":false},{"name":"Thai turn","note":"Fitzroy st, big quantities","isRoute":false},{"name":"Wabi sushi","note":"Prahran, good","isRoute":false},{"name":"Pizza high","note":"south yarra","isRoute":false},{"name":"Kakilang","note":"st Kilda, Cantonese","isRoute":false},{"name":"Bowl bowl","note":"smith st, noodles, bomb","isRoute":false},{"name":"FARINI","note":"Prahran market, pizza slice","isRoute":false},{"name":"Ozzythai","note":"St Kilda","isRoute":false},{"name":"Proud sprout","note":"Collingwood, health bowls","isRoute":false},{"name":"Bistro Voliare","note":"St Kilda, French","isRoute":false},{"name":"Master Ma","note":"South Yarra, xinjiang","isRoute":false},{"name":"Rock pho","note":"South Yarra","isRoute":false},{"name":"Flinders mussels","note":"Mornington peninsula","isRoute":false},{"name":"Papous souvlaki","note":"Rosebud","isRoute":false},{"name":"Griller’s mark","note":"Ballarat, ribs/burgers","isRoute":false},{"name":"A1 Bakery","note":"Brunswick, Lebanese","isRoute":false},{"name":"Bon Ap","note":"Fitzroy, french bistro, meh","isRoute":false},{"name":"Thai on Lenox","note":"Richmond","isRoute":false},{"name":"Supernormal","note":"CBD, Asian/Australian, vibe, bomb lobster rolls","isRoute":false},{"name":"Homeslice","note":"Richmond, pizza","isRoute":false},{"name":"Greenstreat Swan Street","note":"salads","isRoute":false},{"name":"Lady T bar","note":"Richmond, tacos, arepas","isRoute":false},{"name":"Madame Saigon","note":"Fitzroy, Vietnamese, meh","isRoute":false},{"name":"GOGYO","note":"Fitzroy, ramen","isRoute":false},{"name":"Pubcha","note":"Fitzroy, korean","isRoute":false},{"name":"Rocco’s bologna discotera","note":"Fitzroy, sandwiches","isRoute":false},{"name":"Master Lanzhou noodle bar","note":"CBD","isRoute":false},{"name":"St Ali coffee roasters","note":"south Mel, cool vibe small lunch","isRoute":false},{"name":"Sakura Kaiten","note":"CBD, Sushi train, chill","isRoute":false},{"name":"Udon Yasan","note":"CBD, fast self serve","isRoute":false},{"name":"Pizza pizza pizza","note":"CBD, secret bar, busy","isRoute":false},{"name":"Nando’s","note":"CBD, chicken fast food","isRoute":false},{"name":"Tipsy Village","note":"South Melbourne, polish, nice but cheap","isRoute":false},{"name":"Claw and Tail","note":"St Kilda beach, po’boy","isRoute":false},{"name":"Klang Bak Kut Teh","note":"CBD, Chinese","isRoute":false},{"name":"Simpsons burgers","note":"CBD","isRoute":false},{"name":"Pinchy’s","note":"CBD seafood, little outdoor spot, pricey","isRoute":false},{"name":"Juice Veda","note":"South Yarra, health smoothies","isRoute":false}]},{"name":"CLUBS","items":[{"name":"Revs","note":"Prahran, wild 24hrs","isRoute":false},{"name":"The lame duck","note":"Fitzroy, disco","isRoute":false},{"name":"My Aeon","note":"Brunswick, techno","isRoute":false},{"name":"24 moons","note":"northcote, techno","isRoute":false},{"name":"Xe54","note":"CBD, Saturday techno","isRoute":false},{"name":"Sub club","note":"CBD, techno","isRoute":false}]},{"name":"BARS","items":[{"name":"GG EZ","note":"CBD, gaming bar","isRoute":false},{"name":"The Tote","note":"Fitzroy, dive, rock","isRoute":false},{"name":"Sherlock Holmes","note":"CBD, pub","isRoute":false},{"name":"The rum diary bar","note":"Fitzroy","isRoute":false},{"name":"Black pearl","note":"Fitzroy","isRoute":false},{"name":"The Evelyn hotel","note":"Fitzroy","isRoute":false},{"name":"Whiskey and Alement","note":"CBD","isRoute":false},{"name":"Lady Peacock","note":"st Kilda","isRoute":false},{"name":"The belfry bar","note":"Fitzroy","isRoute":false},{"name":"Loch and key","note":"south melb","isRoute":false},{"name":"George lane bar","note":"Fitzroy st, live music","isRoute":false},{"name":"Bunny Bar","note":"Fitzroy st, bbq","isRoute":false},{"name":"Pony fish","note":"cbd in river","isRoute":false},{"name":"Tyranny of distance","note":"Chapel st","isRoute":false},{"name":"Jungle boy","note":"chapel st","isRoute":false},{"name":"Pre drinks bar","note":"Prahran","isRoute":false},{"name":"Bar Ampere","note":"CBD, a friend loved it","isRoute":false},{"name":"Gracie's Wine Room","note":"South Yarra","isRoute":false},{"name":"Johnnys green room","note":"Carlton","isRoute":false},{"name":"Charles Dickens","note":"CBD, downstairs pub","isRoute":false},{"name":"The alps wine bar","note":"Prahran","isRoute":false},{"name":"The Emerson","note":"Prahran, cool rooftop dance vibe","isRoute":false},{"name":"Lenny’s wine room","note":"Richmond","isRoute":false},{"name":"Dons","note":"Prahran, great vibe & food","isRoute":false},{"name":"Talk to me","note":"Prahran, loud and empty","isRoute":false},{"name":"Mr L’s","note":"South Yarra, boujie but meh","isRoute":false},{"name":"Cane cutters","note":"South Yarra, pool table","isRoute":false},{"name":"The standard hotel","note":"Fitzroy, chill pub vibes","isRoute":false},{"name":"Holly grail","note":"chapel st, chill, go to","isRoute":false},{"name":"Lustre","note":"Flinders lane, next to hells","isRoute":false},{"name":"Alberts","note":"Armadale, wine stuff outdoor","isRoute":false},{"name":"Storyville","note":"CBD, cool interior","isRoute":false},{"name":"The Arbory","note":"CBD, basic HQ","isRoute":false},{"name":"The Irish times","note":"CBD","isRoute":false},{"name":"Section 8","note":"CBD","isRoute":false},{"name":"Beneath driver lane","note":"CBD","isRoute":false},{"name":"White Oaks","note":"Prahran, PBR","isRoute":false},{"name":"Young hearts","note":"Prahran, viiiibe","isRoute":false},{"name":"Arcadia hotel","note":"south yarra","isRoute":false},{"name":"Two wrongs","note":"south yarra","isRoute":false},{"name":"Death or glory","note":"chapel","isRoute":false},{"name":"Hoo Ha","note":"Windsor, meh bar","isRoute":false},{"name":"College Lawn","note":"Prahran, outdoor gotta book","isRoute":false},{"name":"Millplace merchants","note":"CBD, hidden, real cool","isRoute":false},{"name":"Hell’s Kitchen","note":"CBD","isRoute":false},{"name":"Caretaker’s Cottage","note":"CBD, little house","isRoute":false},{"name":"Katuk","note":"chapel st, near Leonard’s, cool","isRoute":false},{"name":"Rooftop bar","note":"CBD, next to QV, cool view","isRoute":false},{"name":"The Apollo inn","note":"CBD, cozy and dope","isRoute":false},{"name":"Hotel Esplanade","note":"St Kilda","isRoute":false},{"name":"Berlin bar","note":"CBD, popular, kinda chill small","isRoute":false},{"name":"Harlow","note":"Cremorne, rooftop, chill","isRoute":false},{"name":"Whitehart bar","note":"CBD","isRoute":false},{"name":"Republica","note":"st kilda, loud music dance hot people shit","isRoute":false},{"name":"Ballers clubhouse","note":"CBD, super young kinda cringe but games","isRoute":false},{"name":"Windsor castle","note":"Prahran","isRoute":false},{"name":"Milney’s","note":"Fitzroy, chill dive out back","isRoute":false},{"name":"Fifty-five bar","note":"CBD","isRoute":false},{"name":"The CURTIN","note":"Carlton, chill up top","isRoute":false},{"name":"Longsong","note":"CBD, upstairs, wait for res next door kinda bar","isRoute":false},{"name":"Northcote social club","note":"chill bar with venue","isRoute":false},{"name":"Wesley Anne","note":"Northcote","isRoute":false},{"name":"Casa de vino","note":"south melb","isRoute":false},{"name":"Rumbler bar","note":"chapel st, chic but vibey, loud music","isRoute":false},{"name":"Fad Gallery","note":"CBD, good vibe","isRoute":false},{"name":"Turf","note":"Cbd, sports/irish bar","isRoute":false},{"name":"The fifth province","note":"st Kilda, Irish pub","isRoute":false},{"name":"Freddie wimpoles","note":"st Kilda, music thurs, fri, sun, pbr","isRoute":false},{"name":"Her.","note":"Chapel st, dope alley vibe","isRoute":false},{"name":"The LuWow","note":"CBD, tiki banger","isRoute":false},{"name":"The Everleigh","note":"Fitzroy, famous cocktail spot","isRoute":false},{"name":"Leonard’s House of Love","note":"South Yarra, burgers but also chill bar","isRoute":false},{"name":"Bijou Bottle store","note":"CBD, tiny, whiskey/wine","isRoute":false},{"name":"The Elephant & Wheelbarrow","note":"CBD, pub","isRoute":false},{"name":"Whiskey Den","note":"CBD","isRoute":false},{"name":"Plug Nickel","note":"Collingwood","isRoute":false},{"name":"The shady lady","note":"Fitzroy, chill dive","isRoute":false},{"name":"Willows & wine","note":"North Mel","isRoute":false},{"name":"Cherry","note":"CBD, dive, music upstairs","isRoute":false},{"name":"The old bar","note":"Fitzroy, dive w/ music, pbr","isRoute":false},{"name":"Bar Open","note":"Fitzroy, dive, quiet but live music","isRoute":false},{"name":"Troika Bar","note":"CBD, small quirky vibe","isRoute":false},{"name":"The rooks return","note":"Fitzroy, tiny divey","isRoute":false},{"name":"Loop rooftop","note":"CBD, cool crowded","isRoute":false},{"name":"Napier hotel","note":"Fitzroy, pub, packed","isRoute":false},{"name":"Heartbreaker","note":"CBD, dive but busy, goth mommy bartenders","isRoute":false},{"name":"The Elysian","note":"Fitzroy, chill, incredible espresso martini","isRoute":false},{"name":"Iddy Biddy","note":"St Kilda, cool corner","isRoute":false},{"name":"Kent st","note":"Fitzroy, lowkey, comedy Monday","isRoute":false},{"name":"Blackcat","note":"Fitzroy, chill couch vibe","isRoute":false},{"name":"Imperial hotel","note":"CBD, big rooftop","isRoute":false},{"name":"Naked for satan","note":"Fitzroy, rooftop, poppin","isRoute":false},{"name":"Spleen","note":"CBD, dive, very chill","isRoute":false}]},{"name":"SWEETS","items":[{"name":"Shortstop donuts","note":"CBD","isRoute":false},{"name":"Scoopy","note":"CBD, shaved ice","isRoute":false},{"name":"Chokolait","note":"CBD, royal arcade","isRoute":false},{"name":"Cono","note":"Reservoir","isRoute":false},{"name":"La Petit Crêperies","note":"CBD","isRoute":false}]},{"name":"COFFEE/BREAKFAST","items":[{"name":"Jungle juice bar","note":"CBD","isRoute":false},{"name":"Burnside","note":"Fitzroy","isRoute":false},{"name":"Ovens St Bakery","note":"croissants","isRoute":false},{"name":"Tulip coffee","note":"CBD","isRoute":false},{"name":"Leaps and bounds","note":"Albert park","isRoute":false},{"name":"Brunettes","note":"CBD late night","isRoute":false},{"name":"Maker","note":"south yarra, chapel st","isRoute":false},{"name":"Babka","note":"Fitzroy, croissants","isRoute":false},{"name":"Nine yards","note":"south melb","isRoute":false},{"name":"Coffee Greek Brewers","note":"South Yarra","isRoute":false},{"name":"Tinto","note":"CBD, tiny spot","isRoute":false},{"name":"Peoples coffee","note":"CBD, Big Mac Sando","isRoute":false},{"name":"One More","note":"Prahran, truck","isRoute":false},{"name":"Baker bleu","note":"Cremorne","isRoute":false},{"name":"Crooked letters","note":"Prahran","isRoute":false},{"name":"Penance Coffee","note":"Prahran","isRoute":false},{"name":"Windsor Deli","note":"Windsor, coffee sandwich","isRoute":false},{"name":"Tone coffee","note":"Prahran","isRoute":false},{"name":"Cozy cup","note":"Prahran","isRoute":false},{"name":"Bricklane Bagels","note":"Prahran","isRoute":false},{"name":"Local Batch","note":"South Yarra","isRoute":false},{"name":"Market lane cafe","note":"Prahran market","isRoute":false},{"name":"Rêverie Cafe","note":"Prahran","isRoute":false},{"name":"Chez Mademoiselle","note":"Prahran, eh","isRoute":false},{"name":"Agathe Pâtisserie","note":"South Melbourne","isRoute":false},{"name":"SAGAS Cafe & Retail","note":"CBD","isRoute":false},{"name":"Q le Baker","note":"Prahran market","isRoute":false},{"name":"Hobba","note":"Prahran","isRoute":false},{"name":"St Kilda grocery bar","note":"St kilda","isRoute":false},{"name":"Everyday Midtown","note":"CBD","isRoute":false},{"name":"Leaf lane","note":"South yarra","isRoute":false},{"name":"Canteen","note":"S Melb market","isRoute":false},{"name":"Penny for pound","note":"Richmond, bakery","isRoute":false},{"name":"Mister Copin","note":"Richmond, cafe","isRoute":false},{"name":"Plus Coffee","note":"CBD","isRoute":false},{"name":"Bakemono","note":"CBD, next to rogue","isRoute":false},{"name":"Fabian","note":"CBD, Qv","isRoute":false},{"name":"The league of honest coffee","note":"CBD","isRoute":false},{"name":"Hugs n Mugs","note":"st Kilda","isRoute":false},{"name":"San Luca","note":"South Yarra","isRoute":false},{"name":"Little rogue","note":"CBD, laneway","isRoute":false},{"name":"No Vacancy","note":"CBD, QV","isRoute":false},{"name":"Overhear coffee","note":"Camberwell, sweetheart owners","isRoute":false},{"name":"Bite of life","note":"Prahran East","isRoute":false},{"name":"Zeppelin Kitchen","note":"Brighton","isRoute":false},{"name":"STREAT Cromwell","note":"Collingwood","isRoute":false},{"name":"Seedling Cafe","note":"CBD, tiny","isRoute":false},{"name":"Tin Pot","note":"Fitzroy","isRoute":false},{"name":"Three drops espresso","note":"cbd","isRoute":false},{"name":"Upton Girl","note":"Prahran, open Sunday, good vibe","isRoute":false},{"name":"Into Coffee","note":"Collingwood, cool vibe","isRoute":false},{"name":"Slater St Bench","note":"St Kilda rd","isRoute":false},{"name":"Wolfhound on Brunswick","note":"Fitzroy","isRoute":false},{"name":"Pardon Cafe","note":"Prahran","isRoute":false},{"name":"Eliana Lulu","note":"CBD, meh","isRoute":false},{"name":"Oscar cooper","note":"Prahran","isRoute":false},{"name":"Aix Cafe","note":"CBD, crêpe, cool alley","isRoute":false},{"name":"Mimollete","note":"Windsor","isRoute":false},{"name":"Topolinos","note":"Fitzroy st., pizza","isRoute":false},{"name":"South of Johnston","note":"Collingwood","isRoute":false},{"name":"Willows edge","note":"Albert park","isRoute":false},{"name":"Coffee Society","note":"Albert park","isRoute":false},{"name":"Four miles south","note":"st Kilda","isRoute":false},{"name":"Mavericks","note":"CBD, breakfast","isRoute":false},{"name":"Prophecy espresso","note":"st Kilda, real good","isRoute":false},{"name":"Babble bar & cafe","note":"Prahran","isRoute":false},{"name":"Aunty Pegs","note":"Collingwood, only black","isRoute":false},{"name":"Regina Petro","note":"Greenvale","isRoute":false},{"name":"The edible cafe","note":"Brunswick, chicken and waffle","isRoute":false},{"name":"Riché’s","note":"Richmond","isRoute":false},{"name":"Black Gold","note":"Richmond","isRoute":false},{"name":"Hugo’s deli","note":"Richmond","isRoute":false},{"name":"Socially awkward","note":"Cremorne","isRoute":false},{"name":"1983 Espresso & Panini Bar","note":"Cremorne","isRoute":false},{"name":"Proud Mary","note":"Collingwood","isRoute":false},{"name":"Coffee exchange","note":"CBD","isRoute":false},{"name":"Otherside coffee","note":"CBD","isRoute":false},{"name":"Market Lane","note":"CBD, pour over","isRoute":false},{"name":"Anda Café","note":"CBD, good coff","isRoute":false},{"name":"St Ali Canteen","note":"CBD, hidden alley","isRoute":false},{"name":"Bowery to Williamsburg","note":"CBD, brunch","isRoute":false},{"name":"Traveller Coffee","note":"CBD, small alley","isRoute":false},{"name":"Gordon’s Cafe","note":"CBD","isRoute":false},{"name":"Arcadia","note":"Fitzroy, coffee/brunch","isRoute":false},{"name":"N Lee Bakery","note":"CBD, viet bakery","isRoute":false}]}],"munich":[{"name":"Places","items":[{"name":"Zum Dürnbräu","note":"little cute resto","isRoute":false},{"name":"Viktualienmarkt","note":"outdoor market","isRoute":false},{"name":"Marienplatz","note":"Main DT","isRoute":false},{"name":"Landhaus","note":"lowkey quirky bar","isRoute":false}]}],"philippines":[{"name":"Manila","items":[{"name":"Intramuros","note":"walled city","isRoute":false},{"name":"Fort santiago","note":"","isRoute":false},{"name":"Casa Manila","note":"","isRoute":false},{"name":"National museums","note":"","isRoute":false},{"name":"Luneta park","note":"next to museums","isRoute":false},{"name":"La Fuk","note":"Newport Filipino","isRoute":false}]},{"name":"Coron","items":[{"name":"Mini mountain hike","note":"","isRoute":false},{"name":"Sunburn rooftop bar","note":"","isRoute":false},{"name":"Gavin’s Kitchen/Bar","note":"","isRoute":false}]},{"name":"El Nido","items":[{"name":"Taraw Cliff","note":"canopy walk","isRoute":false},{"name":"Haqqy Life El Nido","note":"Island tours","isRoute":false},{"name":"The Food Truck","note":"","isRoute":false},{"name":"Oriental massage","note":"Sunburn","isRoute":false},{"name":"OPPA Kitchen","note":"tuna bowl","isRoute":false},{"name":"Isa Pa","note":"crepe","isRoute":false},{"name":"Amigos","note":"bar dance floor","isRoute":false},{"name":"Hama Coffee","note":"","isRoute":false},{"name":"Calamari Restobar","note":"Karaoke","isRoute":false},{"name":"Big bad Thai","note":"","isRoute":false},{"name":"Friendz hostel","note":"","isRoute":false}]},{"name":"Boracay","items":[{"name":"Mangrove Walk","note":"","isRoute":false},{"name":"Meze Wrap","note":"","isRoute":false},{"name":"Zugba Grill House","note":"","isRoute":false},{"name":"Haqqy Life Jungle Tour","note":"","isRoute":false},{"name":"Real Coffee","note":"famous muffin","isRoute":false},{"name":"Puka beach","note":"","isRoute":false},{"name":"Happiness Skate Cafe","note":"Cafe in hostel","isRoute":false},{"name":"Inkzomiamain","note":"tat","isRoute":false},{"name":"White beach for sunset","note":"","isRoute":false},{"name":"D’Mall","note":"For souvenirs","isRoute":false},{"name":"Island Chicken Inasal","note":"banging chicken","isRoute":false},{"name":"Stay at Friendz Hostel","note":"dog shit","isRoute":false},{"name":"Happiness Hostel","note":"way vibier","isRoute":false},{"name":"Totally Bananas Cafe","note":"","isRoute":false}]}],"portland":[{"name":"Boujie","items":[{"name":"Republica","note":"Fine dining Mexican","isRoute":false},{"name":"Urdaneta","note":"Best Spanish","isRoute":false},{"name":"Mediterranean exploration company","note":"Crazy good Mediterranean food","isRoute":false},{"name":"Coquine","note":"French and real cool","isRoute":false},{"name":"Langbaan","note":"Higher end Thai","isRoute":false},{"name":"Kachka","note":"Russian food & vodka","isRoute":false},{"name":"Nostrana","note":"Best Italian","isRoute":false},{"name":"Berlu","note":"Best","isRoute":false},{"name":"Arden","note":"Best American/Fusion","isRoute":false},{"name":"Nimblefish","note":"Best sushi and champagne","isRoute":false}]},{"name":"Solid sit downs","items":[{"name":"Scotch lodge","note":"Great cocktails and food","isRoute":false},{"name":"Black Star Grill","note":"Pearl District, west African","isRoute":false},{"name":"Franks Noodle House","note":"Pearl District","isRoute":false},{"name":"Montelupo","note":"Best bang for your buck Italian","isRoute":false},{"name":"Oma’s hideaway","note":"Thai/fusion, laid back","isRoute":false},{"name":"Hat Yai","note":"Fried chicken + curry","isRoute":false},{"name":"Stammtisch","note":"German food & beer","isRoute":false},{"name":"Eem","note":"Insane Thai curry & cocktails","isRoute":false}]},{"name":"Cheap/simple bites","items":[{"name":"La perlita","note":"Mexican café","isRoute":false},{"name":"Miss delta","note":"","isRoute":false},{"name":"South beach fish market","note":"Newport","isRoute":false},{"name":"Pasture","note":"","isRoute":false},{"name":"Reverends BBQ","note":"Sellwood","isRoute":false},{"name":"Tokyo Sando","note":"","isRoute":false},{"name":"Little tea","note":"bread and sandwiches","isRoute":false},{"name":"Gonzalez taqueria","note":"","isRoute":false},{"name":"Tulip shop tavern","note":"","isRoute":false},{"name":"Breaking bread","note":"sandwiches","isRoute":false},{"name":"Butterfly Belly","note":"pho, gluten free","isRoute":false},{"name":"Matt’s BBQ taco","note":"fuck these are good","isRoute":false},{"name":"Frog & Snail","note":"Breakfast crepe burritos","isRoute":false},{"name":"Matt’s BBQ","note":"good BBQ","isRoute":false},{"name":"Gumba","note":"Italian","isRoute":false},{"name":"Le happy","note":"crepes near mt hood","isRoute":false},{"name":"Pizza thief","note":"","isRoute":false},{"name":"Bing Mi","note":"Chinese wraps food cart","isRoute":false},{"name":"Laurelhurst market","note":"","isRoute":false},{"name":"Jojo’s","note":"best chicken sandwich","isRoute":false},{"name":"Lardo","note":"classic sandwich spot, Bánh mì slams","isRoute":false},{"name":"Mid city smash","note":"second best smash","isRoute":false},{"name":"Pleasure burger","note":"best smash burger","isRoute":false},{"name":"Reel m inn","note":"best fried chicken in dive bar","isRoute":false},{"name":"Nongs rice and chicken","note":"worlds best hangover cure","isRoute":false},{"name":"Taste tickler","note":"bomb sandwiches","isRoute":false}]},{"name":"Bars","items":[{"name":"Deadshot bar","note":"","isRoute":false},{"name":"Rum Club","note":"","isRoute":false},{"name":"Enso wine bar","note":"","isRoute":false},{"name":"The Vern","note":"","isRoute":false},{"name":"Roadside attraction","note":"","isRoute":false},{"name":"Triple lindy","note":"","isRoute":false},{"name":"Bare bones","note":"","isRoute":false},{"name":"Les claves","note":"underground wine bar","isRoute":false},{"name":"Psychic bar","note":"","isRoute":false},{"name":"Bar Diane","note":"","isRoute":false},{"name":"Bible club","note":"","isRoute":false},{"name":"Pink Rabbit","note":"pearl loud","isRoute":false},{"name":"Double dragon","note":"chill outdoor","isRoute":false},{"name":"Prost!","note":"Classic German beer tavern","isRoute":false},{"name":"The Rambler","note":"lowkey house bar","isRoute":false},{"name":"Angel face","note":"","isRoute":false},{"name":"Tear drop","note":"","isRoute":false},{"name":"Low brow","note":"best chill dive bar","isRoute":false}]},{"name":"Coffee/Breakfast","items":[{"name":"Crickets cafe","note":"","isRoute":false},{"name":"Twisted croissants","note":"","isRoute":false},{"name":"Stepping stone cafe","note":"24th","isRoute":false},{"name":"Gravy","note":"Mississippi","isRoute":false},{"name":"Nuvrei","note":"","isRoute":false},{"name":"Jinju Pâtisserie","note":"Apparently best pastries","isRoute":false},{"name":"St. Honoré","note":"","isRoute":false},{"name":"Sisters coffee","note":"","isRoute":false},{"name":"Kens artisan bakery","note":"","isRoute":false},{"name":"New Cascadia bagels","note":"gluten free bagels","isRoute":false}]}],"seattle":[{"name":"Places","items":[{"name":"Biscuit Bitch","note":"brekkie","isRoute":false},{"name":"Ooink","note":"Capitol hill, ramen","isRoute":false},{"name":"Harbor city","note":"Chinatown, dim sum","isRoute":false},{"name":"Kau kau","note":"Chinatown, Chinese bbq","isRoute":false},{"name":"Mikes noodle house","note":"Chinatown","isRoute":false},{"name":"Oriental mart","note":"Pikes, Filipino","isRoute":false},{"name":"Kamonegi","note":"Fremont, Japanese","isRoute":false},{"name":"Local tide","note":"Fremont, seafood","isRoute":false},{"name":"Stateside","note":"","isRoute":false},{"name":"St. John’s","note":"","isRoute":false},{"name":"Fletcher Bay","note":"Bainbridge Island, wine","isRoute":false},{"name":"Proper Fish","note":"Bainbridge Island, fish n chips","isRoute":false},{"name":"Bar House","note":"Fremont","isRoute":false},{"name":"Dim sum king","note":"Chinatown","isRoute":false},{"name":"Hi Life","note":"Bainbridge Island, poke, real good","isRoute":false},{"name":"Pikes place chowder","note":"Pikes","isRoute":false},{"name":"Storyville Coffee","note":"Pikes, cinnamon roll","isRoute":false},{"name":"Donna’s","note":"capitol, dive","isRoute":false},{"name":"The hideout","note":"DT","isRoute":false},{"name":"La Dive","note":"Capitol Hill","isRoute":false},{"name":"Canon","note":"Capitol hill, top bar","isRoute":false}]}],"sydney":[{"name":"FOOD","items":[{"name":"Foreign return","note":"Surry hills","isRoute":false},{"name":"Ito","note":"Surry hills, Japanese/Italian","isRoute":false},{"name":"Rollers","note":"Manly, bakery","isRoute":false},{"name":"Bangkok Bites","note":"Bondi, solid Thai","isRoute":false},{"name":"Teddy","note":"Potts point, banger","isRoute":false},{"name":"S'WICH","note":"Bondi, sandwiches","isRoute":false},{"name":"The white horse","note":"Surry Hills, insane","isRoute":false},{"name":"Chinatown sizzling house","note":"CBD","isRoute":false},{"name":"Ms Gs","note":"Asian fusion, cheeseburger rolls, good vibe","isRoute":false},{"name":"Bang Tang","note":"Asian fusion Thai","isRoute":false},{"name":"Chester whites","note":"tiny cute Italian","isRoute":false},{"name":"8things","note":"katoomba, fusion","isRoute":false},{"name":"Chinese noodle house","note":"CBD, cheap good street food","isRoute":false},{"name":"Emperors puffs","note":"CBD, long wait","isRoute":false}]},{"name":"COFFEE","items":[{"name":"Gypsy Espresso","note":"Potts point","isRoute":false},{"name":"Elizabeth Bay Cafe","note":"kings cross","isRoute":false},{"name":"Tuyo","note":"Kings cross","isRoute":false},{"name":"Tuckerbox","note":"moved","isRoute":false},{"name":"Wharf cafe","note":"","isRoute":false},{"name":"Skittle lane","note":"cbd","isRoute":false},{"name":"Innit","note":"Surry Hills","isRoute":false}]},{"name":"BARS","items":[{"name":"RAMBLIN RASCALS","note":"","isRoute":false},{"name":"The clock","note":"","isRoute":false},{"name":"Tio’s","note":"","isRoute":false},{"name":"BAR PLANET","note":"","isRoute":false},{"name":"The old Fitzroy hotel","note":"","isRoute":false},{"name":"Cafe Bikini","note":"Bondi, poppin bar","isRoute":false},{"name":"La vermuteria","note":"Potts point","isRoute":false},{"name":"Duke of Clarence","note":"CBD, cool hidden pub vibe","isRoute":false},{"name":"The winery","note":"surry hills outdoor cocktails","isRoute":false},{"name":"Jangling Jacks","note":"chill people, live music sundays","isRoute":false},{"name":"Shady pines","note":"loud underground speakeasy","isRoute":false}]},{"name":"CLUBS","items":[{"name":"The cliff dive","note":"tiki RnB, crowded and meh","isRoute":false},{"name":"Tatler Sydney","note":"underground small dance","isRoute":false}]},{"name":"PUBS","items":[{"name":"OLD fitzroy hotel","note":"","isRoute":false},{"name":"MARRICKVILLE hotel","note":"","isRoute":false},{"name":"CRICKETERs ARMS","note":"","isRoute":false},{"name":"VIC ON tHe PARK","note":"","isRoute":false},{"name":"THE DARLO","note":"","isRoute":false},{"name":"Vasco","note":"","isRoute":false}]}]};
@@ -114,6 +134,10 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
     const map = L.map('travel-map', {
       center: [-12, 136],
       zoom: 3,
+      minZoom: 2,
+      maxZoom: 19,
+      maxBounds: [[-85, -Infinity], [85, Infinity]],
+      maxBoundsViscosity: 1,
       zoomControl: false,
       // Attribution stays below the map so city panels cannot cover it.
       attributionControl: false,
@@ -125,18 +149,23 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
     });
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }).addTo(map);
+    addTravelBasemap({ L, map, maplibregl: window.maplibregl, style: darkStyle });
 
-    map.on('click', () => closePanel());
+    const spots = collectSpots(CITIES, TRAVEL_DATA, locationData.locations);
+    const spotsByKey = new Map(spots.map(spot => [spot.key, spot]));
+    const radiusLayers = L.layerGroup().addTo(map);
+    const venues = createVenueLayer({ L, map, spots, reducedMotion, popupPadding: () => ({
+      autoPanPaddingTopLeft: [20, 70],
+      autoPanPaddingBottomRight: [document.getElementById('city-panel').classList.contains('open') && !isMobile()
+        ? document.getElementById('city-panel').offsetWidth + 20 : 20, 30],
+    }) });
 
     // Radius glow circles (outer + inner ring)
     function addRadiusCircle(city) {
       const color = city.status === 'lived' ? '#34d399' : '#a5b4fc';
       const base  = { color: 'transparent', fillColor: color, interactive: false };
-      L.circle([city.lat, city.lng], { ...base, radius: city.radius,        fillOpacity: 0.07 }).addTo(map);
-      L.circle([city.lat, city.lng], { ...base, radius: city.radius * 0.4,  fillOpacity: 0.09 }).addTo(map);
+      L.circle([city.lat, city.lng], { ...base, radius: city.radius,        fillOpacity: 0.07 }).addTo(radiusLayers);
+      L.circle([city.lat, city.lng], { ...base, radius: city.radius * 0.4,  fillOpacity: 0.09 }).addTo(radiusLayers);
     }
 
     function makeIcon(status, active) {
@@ -165,13 +194,6 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
         )
         .on('click', e => { L.DomEvent.stopPropagation(e); openPanel(city.id); });
       updateMarker(city.id, false);
-      cityMarkers[city.id].getElement().addEventListener('keydown', e => {
-        if (e.key === ' ') {
-          e.preventDefault();
-          e.stopPropagation();
-          openPanel(city.id);
-        }
-      });
     }
 
     function updateMarker(id, active) {
@@ -179,9 +201,17 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       const marker = cityMarkers[id];
       marker.setIcon(makeIcon(city.status, active));
       const element = marker.getElement();
+      if (!element) return;
       element.setAttribute('aria-label', `Open ${city.name} guide`);
       element.setAttribute('aria-controls', 'city-panel');
       element.setAttribute('aria-expanded', String(active));
+      element.onkeydown = event => {
+        if (event.key === ' ') {
+          event.preventDefault();
+          event.stopPropagation();
+          openPanel(id);
+        }
+      };
     }
 
     // ── Mobile city list toggle ───────────────────────────────────────────────
@@ -192,15 +222,10 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       const inner   = document.getElementById('map-city-list-inner');
       const toggle  = document.getElementById('city-list-toggle');
       const chevron = document.getElementById('city-list-toggle-chevron');
-      if (isMobile()) {
-        inner.style.display             = cityListOpen ? 'flex' : 'none';
-        toggle.style.display            = 'flex';
-        toggle.setAttribute('aria-expanded', String(cityListOpen));
-        chevron.style.transform         = cityListOpen ? 'rotate(180deg)' : '';
-      } else {
-        inner.style.display  = 'flex';
-        toggle.style.display = 'none';
-      }
+      inner.style.display = cityListOpen ? 'flex' : 'none';
+      toggle.style.display = 'flex';
+      toggle.setAttribute('aria-expanded', String(cityListOpen));
+      chevron.style.transform = cityListOpen ? 'rotate(180deg)' : '';
       // On phones the guide covers the map; leave the rest of the page usable.
       const panel = document.getElementById('city-panel');
       const covered = isMobile() && panel.classList.contains('open');
@@ -231,7 +256,7 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       el.innerHTML = CITIES.map(city => {
         const active = city.id === activeId;
         const label  = city.status === 'lived' ? 'Lived' : 'Visited';
-        return `<button class="city-chip${active ? ' active' : ''}" data-city-id="${city.id}" aria-controls="city-panel" aria-expanded="${active}">
+        return `<button class="city-chip${active ? ' active' : ''}" data-city-id="${city.id}" aria-controls="city-panel" aria-expanded="${active && document.getElementById('city-panel').classList.contains('open')}">
           <span class="city-chip-name">${city.name}</span>
           <span class="city-chip-pill ${city.status}">${label}</span>
         </button>`;
@@ -251,11 +276,93 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
 
     // ── Panel ─────────────────────────────────────────────────────────────────
     let activePanelId = null;
+    let activeCategory = 'all';
+
+    document.getElementById('map-filters').innerHTML = MAP_CATEGORIES.map(category =>
+      `<button type="button" data-map-category="${category.id}" aria-pressed="${category.id === 'all'}">${category.id === 'all' ? '' : mapIcon(category.id)}${category.label}</button>`
+    ).join('');
+
+    function currentFilter() {
+      return { cityId: activePanelId, category: activeCategory, query: document.getElementById('panel-search-input').value };
+    }
+
+    function updateMapSpots() {
+      const matches = venues.setFilter(currentFilter());
+      const city = CITIES.find(city => city.id === activePanelId);
+      document.querySelectorAll('[data-map-category]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.mapCategory === activeCategory));
+      });
+      document.getElementById('map-toolbar').hidden = !activePanelId;
+      document.getElementById('map-reset').hidden = !activePanelId;
+      document.getElementById('map-fit').hidden = !activePanelId;
+      document.getElementById('map-fit').disabled = !matches.some(spot => spot.location);
+      document.getElementById('map-guide-toggle').hidden = !activePanelId;
+      document.getElementById('city-list-toggle-label').textContent = city?.name ?? 'Choose a city';
+      updateOverviewMarkers();
+    }
+
+    function updateOverviewMarkers() {
+      const overview = !activePanelId && map.getZoom() < 10;
+      if (overview && !map.hasLayer(radiusLayers)) radiusLayers.addTo(map);
+      if (!overview && map.hasLayer(radiusLayers)) map.removeLayer(radiusLayers);
+      for (const city of CITIES) {
+        const marker = cityMarkers[city.id];
+        const visible = map.getZoom() < 10 && city.id !== activePanelId;
+        if (visible && !map.hasLayer(marker)) { marker.addTo(map); updateMarker(city.id, false); }
+        if (!visible && map.hasLayer(marker)) map.removeLayer(marker);
+      }
+    }
+    map.on('zoomend', updateOverviewMarkers);
+
+    function setGuideOpen(open, focus = true) {
+      const panel = document.getElementById('city-panel');
+      panel.classList.toggle('open', open);
+      panel.setAttribute('aria-hidden', String(!open));
+      panel.inert = !open;
+      const toggle = document.getElementById('map-guide-toggle');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Hide list' : 'Show list';
+      renderCityList(activePanelId);
+      updateCityListVisibility();
+      if (focus) (open ? document.getElementById('city-panel-name') : toggle).focus({ preventScroll: true });
+    }
+
+    document.getElementById('map-guide-toggle').addEventListener('click', () => {
+      setGuideOpen(!document.getElementById('city-panel').classList.contains('open'));
+    });
+    document.getElementById('map-fit').addEventListener('click', () => {
+      const points = matchingSpots(spots, currentFilter()).filter(spot => spot.location)
+        .map(spot => [spot.location.lat, spot.location.lng]);
+      if (!points.length) return;
+      const panelWidth = !isMobile() && document.getElementById('city-panel').classList.contains('open')
+        ? document.getElementById('city-panel').offsetWidth : 0;
+      map.fitBounds(points, { paddingTopLeft: [24, 80], paddingBottomRight: [panelWidth + 24, 36],
+        maxZoom: 15, animate: !reducedMotion.matches });
+    });
+    document.getElementById('map-filters').addEventListener('click', event => {
+      const button = event.target.closest('[data-map-category]');
+      if (!button) return;
+      activeCategory = button.dataset.mapCategory;
+      updateMapSpots();
+      repaintPanelBody(document.getElementById('panel-search-input').value, false);
+    });
+    document.getElementById('map-reset').addEventListener('click', () => {
+      closePanel();
+      activePanelId = null;
+      activeCategory = 'all';
+      document.getElementById('panel-search-input').value = '';
+      cityListOpen = !isMobile();
+      renderCityList(null);
+      updateMapSpots();
+      map.setView([-12, 136], 3, { animate: !reducedMotion.matches });
+      document.getElementById('city-list-toggle').focus({ preventScroll: true });
+    });
 
     function openPanel(id) {
       clearTimeout(panelSearchTimer);
       const city     = CITIES.find(c => c.id === id);
       const sections = city.txt ? (TRAVEL_DATA[city.txt] ?? null) : null;
+      activeCategory = 'all';
 
       // Swap marker states
       if (activePanelId && cityMarkers[activePanelId]) {
@@ -282,44 +389,20 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       body.innerHTML  = renderGuideHTML(city, sections, '', false);
       body.scrollTop  = 0;
 
-      const panel = document.getElementById('city-panel');
-      panel.classList.remove('peek');
-      panel.classList.add('open');
-      panel.setAttribute('aria-hidden', 'false');
-      panel.inert = false;
       activePanelId = id;
-
-      renderCityList(id);
-
-      if (isMobile()) {
-        cityListOpen = false;
-        updateCityListVisibility();
-      }
-
-      document.getElementById('city-panel-name').focus({ preventScroll: true });
-      map.flyTo([city.lat, city.lng], city.zoom ?? 9, { duration: 1.0, animate: !reducedMotion.matches });
+      cityListOpen = false;
+      setGuideOpen(!isMobile());
+      updateMapSpots();
+      map.setView([city.lat, city.lng], city.zoom ?? 13, { animate: false });
+      // Centre the city in the visible part of the map beside the desktop guide.
+      if (!isMobile()) map.panBy([document.getElementById('city-panel').offsetWidth / 2, 0], { animate: false });
     }
 
     function closePanel() {
       clearTimeout(panelSearchTimer);
       const panel = document.getElementById('city-panel');
       if (!panel.classList.contains('open') && !panel.classList.contains('peek')) return;
-      const closingCityId = activePanelId;
-      panel.classList.remove('open', 'peek');
-
-      if (activePanelId && cityMarkers[activePanelId]) {
-        updateMarker(activePanelId, false);
-      }
-      activePanelId = null;
-      renderCityList(null);
-
-      // The city list is rebuilt above, so find its new button before restoring focus.
-      const returnTarget = isMobile()
-        ? document.getElementById('city-list-toggle')
-        : document.querySelector(`[data-city-id="${closingCityId}"]`);
-      returnTarget?.focus({ preventScroll: true });
-      panel.inert = true;
-      panel.setAttribute('aria-hidden', 'true');
+      setGuideOpen(false);
     }
 
     document.getElementById('city-panel-close').addEventListener('click', closePanel);
@@ -328,6 +411,12 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
     // ── Section accordion ─────────────────────────────────────────────────────
     // Delegated — no inline onclick needed
     document.getElementById('city-panel-body').addEventListener('click', e => {
+      const pin = e.target.closest('[data-spot-key]');
+      if (pin) {
+        if (isMobile()) setGuideOpen(false, false);
+        venues.focus(pin.dataset.spotKey);
+        return;
+      }
       const btn = e.target.closest('.cat-summary');
       if (btn) toggleSection(btn);
     });
@@ -386,6 +475,8 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
         : item.note;
 
       const mapsUrl = mapsURL(item, city, section);
+      const key = spotKey(city, section, item);
+      const spot = spotsByKey.get(key);
 
       if (item.isRoute) {
         const stops = item.name.split(/—>|→|->/).map(s => s.trim()).filter(Boolean);
@@ -399,6 +490,7 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       return `<div>
         <div style="display:flex;align-items:baseline;gap:0.35rem;flex-wrap:wrap">
           <a href="${escapeHTML(mapsUrl)}" target="_blank" rel="noopener noreferrer" class="spot-name spot-maps-link">${highlight(item.name, q)}<span class="sr-only"> — Google Maps, opens in a new tab</span></a>
+          ${spot?.location ? `<button type="button" class="spot-map-button" data-spot-key="${escapeHTML(key)}" aria-label="Show ${escapeHTML(item.name)} on map" title="Show on map">${mapIcon('places')}</button>` : ''}
           ${url ? `<a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" class="spot-url-icon" aria-label="Website for ${escapeHTML(item.name)} (opens in a new tab)">↗</a>` : ''}
         </div>
         ${displayNote ? `<div class="spot-note">${highlight(displayNote, q)}</div>` : ''}
@@ -425,12 +517,15 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       psi.focus();
     });
 
-    function repaintPanelBody(q) {
+    function repaintPanelBody(q, refreshMap = true) {
       if (!activePanelId) return;
       q = q.trim().toLowerCase();
       const city     = CITIES.find(c => c.id === activePanelId);
       const sections = city.txt ? (TRAVEL_DATA[city.txt] ?? null) : null;
-      const results  = filterSections(sections, q);
+      const keys = new Set(matchingSpots(spots, { ...currentFilter(), query: q }).map(spot => spot.key));
+      const results = (sections ?? []).map(section => ({ ...section,
+        items: section.items.filter(item => keys.has(spotKey(city, section, item))),
+      })).filter(section => section.items.length);
       const body = document.getElementById('city-panel-body');
       body.innerHTML = renderGuideHTML(city, results, q, q.length > 0);
       body.scrollTop = 0;
@@ -438,7 +533,10 @@ const TRAVEL_DATA = {"brisbane":[{"name":"Food","items":[{"name":"Beccofino","no
       document.getElementById('panel-search-status').textContent = q
         ? `${count} matching ${count === 1 ? 'spot' : 'spots'} in ${city.name}.`
         : `Showing all ${count} spots in ${city.name}.`;
+      if (refreshMap) updateMapSpots();
     }
+
+    updateMapSpots();
 
   </script>
 </body>

@@ -1,7 +1,7 @@
 /* ── Map wrapper ─────────────────────────────────────────────────────── */
 #map-wrap {
   position: relative;
-  margin-top: 2.5rem;
+  margin-top: 0.85rem;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -10,7 +10,15 @@
 #travel-map {
   height: 72vh;
   min-height: 420px;
+  background: #181b23;
 }
+
+/* Keep the basemap quiet; venue icons retain their original colours. */
+.travel-basemap-fallback { filter: grayscale(1) invert(1) brightness(0.65) contrast(0.9); }
+#travel-map .leaflet-control-zoom { border: 1px solid #414653; border-radius: 8px; overflow: hidden; }
+#travel-map .leaflet-control-zoom a { background: #1b1f2a; color: #d5dbe5; border-color: #414653; }
+#travel-map .leaflet-control-zoom a:hover { background: #2e3540; }
+#travel-map .leaflet-control-zoom a.leaflet-disabled { color: #717986; }
 
 /* ── Leaflet tooltip ─────────────────────────────────────────────────── */
 .map-tooltip {
@@ -552,12 +560,6 @@ mark.search-hl {
 }
 
 /* Readability, keyboard focus and touch targets */
-.travel-updated {
-  color: #aeb5c2;
-  font-size: 0.78rem;
-  margin-top: 0.5rem;
-}
-
 .city-marker { display: grid; place-items: center; border-radius: 50%; }
 .city-chip { min-height: 32px; }
 #city-panel-name { overflow-wrap: anywhere; }
@@ -587,4 +589,110 @@ button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-vis
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Place browsing: quiet category colours, large invisible hit areas. */
+.travel-map-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  min-height: 44px;
+}
+.travel-map-toolbar[hidden] { display: none; }
+.travel-map-toolbar[hidden] + #map-filters { margin-top: 2rem; }
+.travel-map-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.travel-map-actions button, #map-filters button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0.45rem 0.8rem;
+  color: #c7cad7;
+  background: #141422;
+  border: 1px solid #333344;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.travel-map-actions button[hidden] { display: none; }
+.travel-map-actions button:disabled { opacity: 0.5; cursor: default; }
+.travel-map-actions button:hover, #map-filters button:hover { border-color: #a5b4fc; color: white; }
+#map-filters { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.75rem; }
+#map-filters button[aria-pressed="true"] { color: #e0e7ff; background: #26263f; border-color: #818cf8; }
+#map-filters svg, .spot-map-button svg { width: 17px; height: 17px; }
+#city-list-toggle { max-width: 270px; min-height: 40px; }
+#city-list-toggle-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.venue-marker, .venue-cluster { display: grid; place-items: center; border-radius: 50%; background: transparent; }
+.venue-marker { --venue-colour: #6b5ca5; }
+.venue-food { --venue-colour: #b65233; }
+.venue-coffee { --venue-colour: #886037; }
+.venue-drinks { --venue-colour: #7151a3; }
+.venue-places { --venue-colour: #207762; }
+.venue-marker-disc {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  background: var(--venue-colour);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 7px #0005;
+  transition: transform 0.15s;
+}
+.venue-marker-disc svg { width: 17px; height: 17px; }
+.venue-marker:hover .venue-marker-disc, .venue-marker:focus-visible .venue-marker-disc { transform: scale(1.15); }
+.venue-cluster-count {
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 6px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: #34334e;
+  box-shadow: 0 2px 8px #0004;
+  font: 700 12px/1 system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.venue-marker:focus-visible, .venue-cluster:focus-visible { outline: 3px solid #312e81; outline-offset: 0; }
+.venue-tooltip { background: #171728; border: 0; border-radius: 6px; color: white; padding: 6px 9px; }
+.venue-tooltip::before { display: none; }
+.venue-popup .leaflet-popup-content-wrapper, .venue-popup .leaflet-popup-tip { background: #171728; color: #f3f4f6; }
+.venue-popup .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 5px 24px #0005; }
+.venue-popup .leaflet-popup-content { margin: 18px 22px 18px 18px; line-height: 1.45; }
+.venue-popup-category { display: block; color: #aeb5c2; font-size: 10px; letter-spacing: 0.02em; margin-bottom: 7px; }
+.venue-popup h3 { color: white; font: 650 16px/1.2 system-ui, sans-serif; margin: 0 0 8px; }
+.venue-popup-content p { margin: 0 0 8px; font-size: 12px; overflow-wrap: anywhere; }
+.venue-popup-address { color: #aeb5c2; }
+.venue-popup-content a { color: #c7d2fe; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-size: 12px; font-weight: 600; }
+.venue-popup-content a:hover { text-decoration: underline; }
+.venue-popup a.leaflet-popup-close-button { color: #c7cad7; width: 32px; height: 32px; line-height: 32px; }
+.spot-map-button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-left: auto;
+  border: 1px solid #444457;
+  border-radius: 7px;
+  color: #c7d2fe;
+  background: #202036;
+  cursor: pointer;
+  align-self: center;
+}
+.spot-map-button:hover { background: #30304d; }
+@media (max-width: 640px) {
+  .travel-map-toolbar { gap: 0.6rem; }
+  #map-filters { gap: 0.35rem; }
+  #map-filters button { min-height: 44px; padding-inline: 0.6rem; }
+  .travel-map-actions button { min-height: 44px; }
+  .spot-map-button { width: 44px; height: 44px; }
+  .venue-popup-content a { min-height: 44px; }
 }

@@ -64,12 +64,35 @@ Edit `travel-lists/*.txt`. Use `## Food` (or another category/destination) for
 section headings, `Place name (optional notes)` for spots, and arrows for routes.
 Blank lines are allowed between spots. `npm run dev` and `npm run build` regenerate
 the embedded guide data; restart the dev server after editing a list. Update the
-last-edited date in `travel.html` when changing the notes.
+Travel page's `lastmod` in `sitemap.xml` when making significant changes to the notes.
 
 Add new destinations to `CITIES` in `scripts/travel-guide.mjs`. Multi-destination
 guides can use `sectionLocations: true` so map links search the section's locality.
-The basemap uses standard OpenStreetMap tiles without an API key, with visible
-attribution below the map. Follow the [tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
+The dark vector basemap uses [OpenFreeMap](https://openfreemap.org/) without an API
+key, rendered through MapLibre's Leaflet adapter. Its local style is
+`map-styles/travel-dark.json`: a quieter Dark Matter palette without buildings,
+railways or extra icons, with street names appearing at close zooms. Style credits
+and licenses are in `map-styles/LICENSE.txt`, linked below the map alongside data
+attribution. Keep the MapLibre and adapter versions pinned and compatible.
+If WebGL or the initial basemap load fails, it falls back to subdued OpenStreetMap
+raster tiles; the pins and guide remain available. Follow the
+[tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
 
-Run `npm test` for travel search, link and data regression checks; run
+Venue pins use saved OpenStreetMap coordinates in `travel-lists/locations.json`.
+There is no geocoding API call on page load or during a build. Each location records
+the exact city ID, section and place name from the notes, its coordinates, and its
+OpenStreetMap source URL. Confirm the correct branch and neighbourhood before adding
+a location; leave ambiguous names and routes unpinned. If a name or section changes,
+update the corresponding location as well. Notes and list order can change freely.
+The coordinate data is attributed to OpenStreetMap contributors under ODbL 1.0.
+
+Pins cluster at wider zoom levels. The category filters and guide search apply to
+both the list and map. A venue listed in multiple categories shares a pin. The
+mobile guide opens separately with “Show list”, leaving the map available to pan.
+All notes remain searchable even when their location has not been matched.
+
+Run `node scripts/travel-map-coverage.mjs` for coverage by city, or add `--csv` to
+export unpinned entries with their notes and Google Maps search links for review.
+
+Run `npm test` for travel search, link, coordinate and data regression checks; run
 `npm run build` to produce the deployable `dist/` directory.
